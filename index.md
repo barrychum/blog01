@@ -1,5 +1,5 @@
 ---
-title: My First Post
+layout: layout.njk
+title: My Home Page
 ---
-# Hello World!
-This is my 11ty blog hosted on Cloudflare.
+Welcome to my blog! This content is now wrapped in a nice layout.

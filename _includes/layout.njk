@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.6; }
+    nav { border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
+    nav a { margin-right: 15px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/about/">About</a>
+  </nav>
+  <h1>{{ title }}</h1>
+  {{ content | safe }}
+</body>
+</html>

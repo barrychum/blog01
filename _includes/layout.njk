@@ -4,78 +4,82 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title }}</title>
-  <style>
 
-body { 
-  font-family: sans-serif; 
-  max-width: 1000px; 
-  margin: 40px auto; 
-  padding: 0 20px; 
-  line-height: 1.6; 
-}
+<style>
+  /* Base Styles */
+  body { 
+    font-family: sans-serif; 
+    max-width: 1000px; 
+    margin: 40px auto; 
+    padding: 0 20px; 
+    line-height: 1.6; 
+  }
 
-/* Default for Mobile: Stack them vertically */
-.container { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 30px; 
-}
+  nav { 
+    margin-bottom: 20px; 
+    border-bottom: 1px solid #eee; 
+    padding-bottom: 10px; 
+  }
 
-aside { 
-  border-top: 1px solid #eee; 
-  padding-top: 20px; 
-}
-
-/* Desktop: Side-by-side when the screen is wider than 768px */
-@media (min-width: 768px) {
+  /* Layout Container */
   .container { 
-    flex-direction: row; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 30px; 
   }
-  
-  main { flex: 3; }
-  
+
   aside { 
-    flex: 1; 
-    border-top: none; 
-    border-left: 1px solid #eee; 
-    padding-left: 20px; 
-    padding-top: 0;
+    border-top: 1px solid #eee; 
+    padding-top: 20px; 
   }
-}
 
-.post-nav {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 40px;
-  padding-top: 20px;
-}
-.post-nav div {
-  flex: 1;
-}
+  /* Desktop View */
+  @media (min-width: 768px) {
+    .container { 
+      flex-direction: row; 
+    }
+    main { flex: 3; }
+    aside { 
+      flex: 1; 
+      border-top: none; 
+      border-left: 1px solid #eee; 
+      padding-left: 20px; 
+      padding-top: 0;
+    }
+  }
 
+  /* Post Lists and Navigation */
+  .post-list { list-style: none; padding: 0; }
+  .post-list li { margin-bottom: 10px; }
 
-.archive-tree details {
-  margin-bottom: 5px;
-}
-.archive-tree summary {
-  cursor: pointer;
-  padding: 2px 0;
-  list-style: none; /* Removes default arrow in some browsers */
-}
-.archive-tree summary:hover {
-  color: #007bff;
-}
-/* Optional: Adds a custom arrow */
-.archive-tree summary::before {
-  content: "▶ ";
-  font-size: 0.8em;
-}
-.archive-tree details[open] > summary::before {
-  content: "▼ ";
-}
+  .post-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding-top: 20px;
+  }
+  .post-nav div { flex: 1; }
 
-  </style>
-
+  /* Archive Tree Styles */
+  .archive-tree details {
+    margin-bottom: 5px;
+  }
+  .archive-tree summary {
+    cursor: pointer;
+    padding: 2px 0;
+    list-style: none;
+  }
+  .archive-tree summary:hover {
+    color: #007bff;
+  }
+  .archive-tree summary::before {
+    content: "▶ ";
+    font-size: 0.8em;
+  }
+  .archive-tree details[open] > summary::before {
+    content: "▼ ";
+  }
+</style>
 
 </head>
 <body>

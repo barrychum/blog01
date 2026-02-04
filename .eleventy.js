@@ -16,6 +16,30 @@ module.exports = function(eleventyConfig) {
     return `${readingTime} min read`;
   });
 
+
+  // 3. Grouping Filter (Fixes the "undefined post" error)
+  // This replaces the logic that was previously in _data/archives.js
+  eleventyConfig.addFilter("groupByYearMonth", function(posts) {
+    const structure = {};
+    
+    // Ensure we have a collection to work with
+    const postList = posts || [];
+
+    postList.forEach(post => {
+      if (!post.date) return;
+      
+      const year = post.date.getFullYear();
+      const month = post.date.toLocaleString('default', { month: 'long' });
+
+      if (!structure[year]) structure[year] = {};
+      if (!structure[year][month]) structure[year][month] = [];
+
+      structure[year][month].push(post);
+    });
+    
+    return structure;
+  });
+
   return {
     dir: {
       input: ".",

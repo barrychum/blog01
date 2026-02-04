@@ -25,7 +25,7 @@
       {{ content | safe }}
     </main>
 
-/*
+<!-- 
     <aside>
       <h3>All Posts</h3>
       <ul class="post-list">
@@ -34,7 +34,7 @@
         {% endfor %}
       </ul>
     </aside>
-*/
+ -->
 
 <aside>
   <h3>Recent Posts</h3>
@@ -43,7 +43,8 @@
     {% for post in collections.post | reverse %}
       <li>
         <a href="{{ post.url }}">{{ post.data.title }}</a><br>
-        <small>{{ post.date.toDateString() }}</small>
+<!--        <small>{{ post.date.toDateString() }}</small> -->
+        <small>{{ post.date | postDate }}</small>
       </li>
     {% endfor %}
   </ul>

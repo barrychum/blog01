@@ -178,7 +178,7 @@ aside {
     .then(data => posts = data);
 
   // 2. Filter on input
-  searchInput.addEventListener('input', (e) => {
+searchInput.addEventListener('input', (e) => {
     const term = e.target.value.toLowerCase();
     resultsList.innerHTML = '';
     
@@ -187,15 +187,25 @@ aside {
       return;
     }
 
-    const filtered = posts.filter(post => 
-      post.title.toLowerCase().includes(term)
-    );
+    const filtered = posts.filter(post => {
+      // Search in our combined title/tags string OR the formatted date
+      return post.searchContent.includes(term) || 
+             post.date.toLowerCase().includes(term);
+    });
 
     if (filtered.length > 0) {
       resultsList.style.display = 'block';
       filtered.forEach(post => {
         const li = document.createElement('li');
-        li.innerHTML = `<a href="${post.url}">${post.title}</a> <br> <small>${post.date}</small>`;
+        // Clean up tags for display (optional)
+        const tagList = Array.isArray(post.tags) 
+                        ? post.tags.filter(t => t !== 'post').join(', ') 
+                        : '';
+                        
+        li.innerHTML = `
+          <a href="${post.url}">${post.title}</a><br>
+          <small>${post.date} ${tagList ? 'in ' + tagList : ''}</small>
+        `;
         resultsList.appendChild(li);
       });
     } else {

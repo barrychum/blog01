@@ -1,6 +1,7 @@
 ---
 title: My Second Blog Post
 date: 2026-02-02
+tags: five,ten
 ---
 However, it can be said that online relationships are weaker and
 not as real as face-to-face relationships. Online relationships are

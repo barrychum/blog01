@@ -65,28 +65,6 @@ aside {
 .post-nav div {
   flex: 1;
 }
-
-
-.archive-tree details {
-  margin-bottom: 5px;
-}
-.archive-tree summary {
-  cursor: pointer;
-  padding: 2px 0;
-  list-style: none; /* Removes default arrow in some browsers */
-}
-.archive-tree summary:hover {
-  color: #007bff;
-}
-/* Optional: Adds a custom arrow */
-.archive-tree summary::before {
-  content: "▶ ";
-  font-size: 0.8em;
-}
-.archive-tree details[open] > summary::before {
-  content: "▼ ";
-}
-
   </style>
 
 
@@ -152,7 +130,6 @@ aside {
     </aside>
  -->
 
-<!--
 <aside>
   <h3>Recent Posts</h3>
   <ul class="post-list">
@@ -160,41 +137,11 @@ aside {
     {% for post in collections.post | reverse %}
       <li>
         <a href="{{ post.url }}">{{ post.data.title }}</a><br>
-        <small>{{ post.date.toDateString() }}</small> 
+<!--        <small>{{ post.date.toDateString() }}</small> -->
         <small>{{ post.date | postDate }}</small>
       </li>
     {% endfor %}
   </ul>
-</aside>
--->
-
-
-<aside>
-  <h3>Archive</h3>
-  <div class="archive-tree">
-    {# Loop through Years (descending) #}
-    {% for year, months in archives | dictsort | reverse %}
-      <details open>
-        <summary><strong>{{ year }}</strong></summary>
-        
-        <div style="margin-left: 15px;">
-          {# Loop through Months #}
-          {% for month, posts in months %}
-            <details>
-              <summary>{{ month }} ({{ posts.length }})</summary>
-              <ul class="post-list" style="margin-left: 15px;">
-                {% for post in posts | reverse %}
-                  <li>
-                    <a href="{{ post.url }}">{{ post.data.title }}</a>
-                  </li>
-                {% endfor %}
-              </ul>
-            </details>
-          {% endfor %}
-        </div>
-      </details>
-    {% endfor %}
-  </div>
 </aside>
 
   </div>

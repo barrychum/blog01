@@ -82,15 +82,9 @@ aside {
 
 <main>
 
-<main>
+
+
   <h1>{{ title }}</h1>
-  <p style="color: #666;">
-    {# Show date and read time only if it's a post #}
-    {% if tags and "post" in tags %}
-      {{ page.date | postDate }} • <span>{{ content | readTime }}</span>
-    {% endif %}
-  </p>
-  
   {{ content | safe }}
 
   <hr>

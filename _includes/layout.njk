@@ -166,20 +166,27 @@ aside {
 
   </div>
 
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
 
 <script>
-  const searchInput = document.getElementById('search-input');
+const searchInput = document.getElementById('search-input');
   const resultsList = document.getElementById('search-results');
-  let posts = [];
+  let fuse;
 
-  // 1. Fetch the index once
+  // 1. Fetch the index and initialize Fuse
   fetch('/search.json')
     .then(response => response.json())
-    .then(data => posts = data);
+    .then(data => {
+      fuse = new Fuse(data, {
+        keys: ['title', 'tags', 'date'], // The fields to search in
+        threshold: 0.3, // 0.0 = perfect match, 1.0 = match anything. 0.3 is the "sweet spot"
+        distance: 100   // How far the typo can be from the original word
+      });
+    });
 
-  // 2. Filter on input
-searchInput.addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase();
+  // 2. Perform Fuzzy Search
+  searchInput.addEventListener('input', (e) => {
+    const term = e.target.value;
     resultsList.innerHTML = '';
     
     if (term.length < 2) {
@@ -187,17 +194,14 @@ searchInput.addEventListener('input', (e) => {
       return;
     }
 
-    const filtered = posts.filter(post => {
-      // Search in our combined title/tags string OR the formatted date
-      return post.searchContent.includes(term) || 
-             post.date.toLowerCase().includes(term);
-    });
+    // Use Fuse to search
+    const results = fuse.search(term);
 
-    if (filtered.length > 0) {
+    if (results.length > 0) {
       resultsList.style.display = 'block';
-      filtered.forEach(post => {
+      results.forEach(result => {
+        const post = result.item; // Fuse wraps results in an 'item' object
         const li = document.createElement('li');
-        // Clean up tags for display (optional)
         const tagList = Array.isArray(post.tags) 
                         ? post.tags.filter(t => t !== 'post').join(', ') 
                         : '';

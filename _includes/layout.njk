@@ -132,6 +132,13 @@ aside {
 </main>
 
 <aside>
+
+<h3>Search</h3>
+  <input type="text" id="search-input" placeholder="Type to search..." style="width: 100%; padding: 8px; box-sizing: border-box; margin-bottom: 10px;">
+  <ul id="search-results" class="post-list" style="display: none; background: #f9f9f9; padding: 10px; border: 1px solid #ddd;"></ul>
+
+  <hr>
+
   <h3>Archive</h3>
   <div class="archive-tree">
     {# Apply our new filter to the post collection #}
@@ -158,5 +165,45 @@ aside {
 </aside>
 
   </div>
+
+
+<script>
+  const searchInput = document.getElementById('search-input');
+  const resultsList = document.getElementById('search-results');
+  let posts = [];
+
+  // 1. Fetch the index once
+  fetch('/search.json')
+    .then(response => response.json())
+    .then(data => posts = data);
+
+  // 2. Filter on input
+  searchInput.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase();
+    resultsList.innerHTML = '';
+    
+    if (term.length < 2) {
+      resultsList.style.display = 'none';
+      return;
+    }
+
+    const filtered = posts.filter(post => 
+      post.title.toLowerCase().includes(term)
+    );
+
+    if (filtered.length > 0) {
+      resultsList.style.display = 'block';
+      filtered.forEach(post => {
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="${post.url}">${post.title}</a> <br> <small>${post.date}</small>`;
+        resultsList.appendChild(li);
+      });
+    } else {
+      resultsList.style.display = 'block';
+      resultsList.innerHTML = '<li>No matches found</li>';
+    }
+  });
+</script>
+
 </body>
 </html>

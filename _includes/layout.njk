@@ -6,6 +6,7 @@
   <title>{{ title }}</title>
   <style>
 
+<<<<<<< HEAD
   <!--
     body { font-family: sans-serif; max-width: 1000px; margin: 40px auto; padding: 0 20px; line-height: 1.6; }
     nav { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
@@ -34,6 +35,23 @@ body {
   gap: 30px; 
 }
 
+=======
+body { 
+  font-family: sans-serif; 
+  max-width: 1000px; 
+  margin: 40px auto; 
+  padding: 0 20px; 
+  line-height: 1.6; 
+}
+
+/* Default for Mobile: Stack them vertically */
+.container { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 30px; 
+}
+
+>>>>>>> parent of 559e23a (Update layout.njk)
 aside { 
   border-top: 1px solid #eee; 
   padding-top: 20px; 
@@ -65,8 +83,35 @@ aside {
 .post-nav div {
   flex: 1;
 }
+<<<<<<< HEAD
   </style>
 
+=======
+
+
+.archive-tree details {
+  margin-bottom: 5px;
+}
+.archive-tree summary {
+  cursor: pointer;
+  padding: 2px 0;
+  list-style: none; /* Removes default arrow in some browsers */
+}
+.archive-tree summary:hover {
+  color: #007bff;
+}
+/* Optional: Adds a custom arrow */
+.archive-tree summary::before {
+  content: "▶ ";
+  font-size: 0.8em;
+}
+.archive-tree details[open] > summary::before {
+  content: "▼ ";
+}
+
+  </style>
+
+>>>>>>> parent of 559e23a (Update layout.njk)
 
 </head>
 <body>

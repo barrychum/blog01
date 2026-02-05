@@ -1,0 +1,76 @@
+/* Base Styles */
+body { 
+  font-family: sans-serif; 
+  max-width: 1000px; 
+  margin: 40px auto; 
+  padding: 0 20px; 
+  line-height: 1.6; 
+}
+
+/* Layout */
+.container { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 30px; 
+}
+
+aside { 
+  border-top: 1px solid #eee; 
+  padding-top: 20px; 
+}
+
+@media (min-width: 768px) {
+  .container { flex-direction: row; }
+  main { flex: 3; }
+  aside { 
+    flex: 1; 
+    border-top: none; 
+    border-left: 1px solid #eee; 
+    padding-left: 20px; 
+    padding-top: 0;
+  }
+}
+
+/* Post Navigation (Cleaned & Combined) */
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 0;
+}
+
+.post-nav div { flex: 1; }
+
+.post-nav a {
+  font-size: 0.9rem;
+  color: #555;
+  text-decoration: none;
+}
+
+.post-nav a:hover {
+  text-decoration: underline;
+  color: #007bff;
+}
+
+.post-nav strong {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #999;
+}
+
+/* UI Elements */
+hr {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+.archive-tree details { margin-bottom: 5px; }
+.archive-tree summary { cursor: pointer; padding: 2px 0; list-style: none; }
+.archive-tree summary:hover { color: #007bff; }
+.archive-tree summary::before { content: "▶ "; font-size: 0.8em; }
+.archive-tree details[open] > summary::before { content: "▼ "; }
+
+.post-list { list-style: none; padding: 0; margin: 0; }

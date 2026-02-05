@@ -4,97 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title }}</title>
-  <style>
+  <link rel="stylesheet" href="/css/style.css">
 
-
-body { 
-  font-family: sans-serif; 
-  max-width: 1000px; 
-  margin: 40px auto; 
-  padding: 0 20px; 
-  line-height: 1.6; 
-}
-
-/* Default for Mobile: Stack them vertically */
-.container { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 30px; 
-}
-
-aside { 
-  border-top: 1px solid #eee; 
-  padding-top: 20px; 
-}
-
-/* Desktop: Side-by-side when the screen is wider than 768px */
-@media (min-width: 768px) {
-  .container { 
-    flex-direction: row; 
-  }
   
-  main { flex: 3; }
-  
-  aside { 
-    flex: 1; 
-    border-top: none; 
-    border-left: 1px solid #eee; 
-    padding-left: 20px; 
-    padding-top: 0;
-  }
-}
-
-.post-nav {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 40px;
-  padding-top: 20px;
-}
-.post-nav div {
-  flex: 1;
-}
-
-
-.archive-tree details {
-  margin-bottom: 5px;
-}
-.archive-tree summary {
-  cursor: pointer;
-  padding: 2px 0;
-  list-style: none; /* Removes default arrow in some browsers */
-}
-.archive-tree summary:hover {
-  color: #007bff;
-}
-/* Optional: Adds a custom arrow */
-.archive-tree summary::before {
-  content: "▶ ";
-  font-size: 0.8em;
-}
-.archive-tree details[open] > summary::before {
-  content: "▼ ";
-}
-
-  </style>
-
 
 </head>
 <body>
   <nav><a href="/">Home</a> | <a href="/about/">About</a></nav>
 
   <div class="container">
-<!--
-    <main>
-      <h1>{{ title }}</h1>
-      <p style="color: #666;">
-    {# Show date and read time only if it's a post #}
-    {% if tags and "post" in tags %}
-      {{ page.date | postDate }} • <span>{{ content | readTime }}</span>
-    {% endif %}
-  </p>
-      {{ content | safe }}
-    </main>
--->
 
 <main>
 
@@ -145,7 +63,8 @@ aside {
     {% set archivedPosts = collections.post | groupByYearMonth %}
     
     {% for year, months in archivedPosts | dictsort | reverse %}
-      <details open>
+      <!-- <details open> -->
+      <details>
         <summary><strong>{{ year }}</strong></summary>
         <div style="margin-left: 15px;">
           {% for month, posts in months %}
@@ -162,7 +81,6 @@ aside {
       </details>
     {% endfor %}
   </div>
-
 
 
   <section class="sidebar-section">

@@ -17,12 +17,33 @@
 <main>
 
 
-  <h1>{{ title }}</h1>
-  {# Show date and read time only if it's a post #}
-    {% if tags and "post" in tags %}
-      {{ page.date | postDate }} • <span>{{ content | readTime }}</span>
-    {% endif %}
+
+<h1>{{ title }}</h1>
+
+{# Check if 'post' is in the tags array safely #}
+{% if tags and "post" in tags %}
+  <div style="margin-bottom: 20px; color: #666; font-size: 0.9rem;">
+    {# Line 2: Date #}
+    <span>{{ page.date | postDate }}</span> • 
+    
+    {# Tags - using a filter to ensure it's iterable #}
+    {% for tag in tags %}
+      {% if tag != "post" %}
+        <span style="background: #eee; padding: 2px 6px; border-radius: 4px; margin-right: 5px; color: #333;">
+          {{ tag }}
+        </span>
+      {% endif %}
+    {% endfor %}
+    
+    {# Read Time #}
+    • <span>{{ content | readTime }}</span>
+  </div>
+{% endif %}
+
+{# Ensure content is always rendered #}
+<div class="post-content">
   {{ content | safe }}
+</div>
 
   <hr>
 
@@ -86,24 +107,24 @@
   <section class="sidebar-section">
     <h3>Tags</h3>
     <div class="archive-tree">
-      {% macro renderTag(name, data) %}
-        <details>
-          <summary>{{ name }} {% if data._posts.length > 0 %}({{ data._posts.length }}){% endif %}</summary>
-          <div style="margin-left: 15px;">
-            {# Render sub-tags if they exist #}
-            {% for childName, childData in data._children %}
-              {{ renderTag(childName, childData) }}
-            {% endfor %}
+{% macro renderTag(name, data) %}
+  <details>
+    <summary>{{ name }}</summary>
+    {# Child Tags #}
+    {% for childName, childData in data._children %}
+      {{ renderTag(childName, childData) }}
+    {% endfor %}
 
-            {# Render posts at this level #}
-            <ul class="post-list">
-              {% for post in data._posts %}
-                <li><a href="{{ post.url }}">{{ post.data.title }}</a></li>
-              {% endfor %}
-            </ul>
-          </div>
-        </details>
-      {% endmacro %}
+    {# Posts #}
+    {% if data._posts.length > 0 %}
+      <ul>
+        {% for post in data._posts %}
+          <li><a href="{{ post.url }}">{{ post.data.title }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </details>
+{% endmacro %}
 
       {% set tagTree = collections | groupTagsByPath(collections) %}
       {% for tagName, tagData in tagTree %}

@@ -67,10 +67,107 @@ hr {
   border-top: 1px solid #eee;
 }
 
+/*
 .archive-tree details { margin-bottom: 5px; }
 .archive-tree summary { cursor: pointer; padding: 2px 0; list-style: none; }
 .archive-tree summary:hover { color: #007bff; }
 .archive-tree summary::before { content: "▶ "; font-size: 0.8em; }
 .archive-tree details[open] > summary::before { content: "▼ "; }
+*/
 
+/* Container for the tree */
+.archive-tree {
+  padding-left: 10px;
+}
+
+/* Remove default arrows */
+.archive-tree summary {
+  list-style: none;
+  display: block;
+  cursor: pointer;
+  position: relative;
+  padding-left: 20px;
+  color: #0056b3; /* Blue links like your screenshot */
+}
+.archive-tree summary::-webkit-details-marker { display: none; }
+
+/* The vertical connector lines */
+.archive-tree details {
+  position: relative;
+  margin-left: 10px;
+  border-left: 1px dotted #999;
+}
+
+/* The horizontal lines leading to items */
+.archive-tree summary::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 0;
+  width: 15px;
+  border-top: 1px dotted #999;
+}
+
+/* The +/- Box Icons */
+.archive-tree summary::before {
+  content: "+";
+  position: absolute;
+  left: -5px;
+  top: 8px;
+  width: 7px;
+  height: 7px;
+  line-height: 8px;
+  text-align: center;
+  background: white;
+  border: 1px solid #999;
+  font-size: 12px;
+  color: #666;
+  z-index: 1;
+}
+
+/* Change + to - when open */
+.archive-tree details[open] > summary::before {
+  content: "-";
+}
+
+/* Fix for the very last item in a list so the vertical line doesn't hang down */
+.archive-tree details:last-child {
+  border-left: none;
+}
+.archive-tree details:last-child::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 12px;
+  border-left: 1px dotted #999;
+}
+
+/* Style for actual post links (the "leaves") */
+.archive-tree ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 20px;
+  border-left: 1px dotted #999;
+}
+
+.archive-tree li {
+  position: relative;
+  padding-left: 15px;
+}
+
+.archive-tree li::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 0;
+  width: 10px;
+  border-top: 1px dotted #999;
+}
+
+.archive-tree a {
+  text-decoration: none;
+  font-size: 0.95rem;
+  color: #0056b3;
+}
 .post-list { list-style: none; padding: 0; margin: 0; }

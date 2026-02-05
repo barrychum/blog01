@@ -162,6 +162,40 @@ aside {
       </details>
     {% endfor %}
   </div>
+
+
+
+  <section class="sidebar-section">
+    <h3>Tags</h3>
+    <div class="archive-tree">
+      {% macro renderTag(name, data) %}
+        <details>
+          <summary>{{ name }} {% if data._posts.length > 0 %}({{ data._posts.length }}){% endif %}</summary>
+          <div style="margin-left: 15px;">
+            {# Render sub-tags if they exist #}
+            {% for childName, childData in data._children %}
+              {{ renderTag(childName, childData) }}
+            {% endfor %}
+
+            {# Render posts at this level #}
+            <ul class="post-list">
+              {% for post in data._posts %}
+                <li><a href="{{ post.url }}">{{ post.data.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </details>
+      {% endmacro %}
+
+      {% set tagTree = collections | groupTagsByPath(collections) %}
+      {% for tagName, tagData in tagTree %}
+        {{ renderTag(tagName, tagData) }}
+      {% endfor %}
+    </div>
+  </section>
+
+  <hr>
+
 </aside>
 
   </div>

@@ -40,6 +40,33 @@ module.exports = function(eleventyConfig) {
     return structure;
   });
 
+
+eleventyConfig.addFilter("groupTagsByPath", function(allTags, collections) {
+    const tree = {};
+
+    Object.keys(allTags).forEach(tag => {
+      // Skip the built-in 'all' and 'post' tags
+      if (tag === 'all' || tag === 'post') return;
+
+      const parts = tag.split('/');
+      let current = tree;
+
+      parts.forEach((part, index) => {
+        if (!current[part]) {
+          current[part] = { _posts: [], _children: {} };
+        }
+        
+        // If it's the leaf node (the end of the path), add the posts
+        if (index === parts.length - 1) {
+          current[part]._posts = collections[tag] || [];
+        }
+        current = current[part]._children;
+      });
+    });
+
+    return tree;
+  });
+
   return {
     dir: {
       input: ".",

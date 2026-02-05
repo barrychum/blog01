@@ -214,6 +214,7 @@ const searchInput = document.getElementById('search-input');
       fuse = new Fuse(data, {
         keys: ['title', 'tags', 'date'], // The fields to search in
         threshold: 0.3, // 0.0 = perfect match, 1.0 = match anything. 0.3 is the "sweet spot"
+        useExtendedSearch: true, // This is the key for specific path searching
         distance: 100   // How far the typo can be from the original word
       });
     });

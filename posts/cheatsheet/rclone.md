@@ -4,6 +4,7 @@ date: 2024-07-25
 tags: 
   - "Cheatsheet/rclone"
 ---
+{% raw %}
 # rclone cheatsheet
 
 https://rclone.org/filtering/#regexp
@@ -154,3 +155,4 @@ Here is how to create your own Google Drive client ID for rclone:
 
 Be aware that, due to the "enhanced security" recently introduced by Google, you are theoretically expected to "submit your app for verification" and then wait a few weeks(!) for their response; in practice, you can go right ahead and use the client ID and client secret with rclone, the only issue will be a very scary confirmation screen shown when you connect via your browser for rclone to be able to get its token-id (but as this only happens during the remote configuration, it's not such a big deal). Keeping the application in "Testing" will work as well, but the limitation is that any grants will expire after a week, which can be annoying to refresh constantly. If, for whatever reason, a short grant time is not a problem, then keeping the application in testing mode would also be sufficient.
 
+{% endraw %}

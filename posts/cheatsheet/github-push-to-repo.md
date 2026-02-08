@@ -4,6 +4,7 @@ date: 2024-07-05
 tags: 
   - "Cheatsheet/Github"
 ---
+{% raw %}
 You can certainly push the Scout summary to a Hugo static site hosted on GitHub Pages and trigger a rebuild. Here's how you could set this up:
 
 1. Push Scout summary to Hugo repo:
@@ -92,5 +93,4 @@ Also, ensure your Hugo site is set up to render raw HTML (you might need to add 
 
 This approach will trigger a rebuild of your GitHub Pages site automatically. The Scout summary will be available as a new page on your Hugo site.
 
-
-
+{% endraw %}

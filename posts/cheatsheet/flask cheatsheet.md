@@ -4,6 +4,7 @@ date: 2024-06-07
 tags: 
   - "Cheatsheet"
 ---
+{% raw %}
 The most common Flask project file structure follows a modular approach that separates concerns and organizes files in a way that scales well with project size. Here's a typical structure:
 
 ```
@@ -219,3 +220,4 @@ if __name__ == '__main__':
 ```
 
 This structure helps keep your project organized and maintainable as it grows.
+{% endraw %}

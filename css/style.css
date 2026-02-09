@@ -31,12 +31,11 @@ aside {
   }
 }
 
-/* Post Navigation (Cleaned & Combined) */
+/* Post Navigation */
 .post-nav {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-  padding-top: 0;
 }
 
 .post-nav div { flex: 1; }
@@ -61,35 +60,33 @@ aside {
 
 /* UI Elements */
 hr {
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin: 20px 0 10px 0;
   border: 0;
   border-top: 1px solid #eee;
 }
 
 .post-list { list-style: none; padding: 0; margin: 0; }
 
+/******************************************
+  ARCHIVE TREE (NESTED TAGS / DATES)
+******************************************/
 
-/********************/
-
-/* Container padding */
 .archive-tree {
   padding-left: 5px;
 }
 
-/* Each level gets a vertical line */
+/* Folder Levels */
 .archive-tree details {
   position: relative;
-  margin-left: 12px; /* Space for the line */
+  margin-left: 12px;
   border-left: 1px dotted #999;
 }
 
-/* Remove the line for the very last item so it doesn't hang down */
 .archive-tree details:last-child {
   border-left: none;
 }
 
-/* Create a short vertical line for the last child's L-shape */
+/* L-shape for folders */
 .archive-tree details:last-child::before {
   content: "";
   position: absolute;
@@ -99,38 +96,38 @@ hr {
   border-left: 1px dotted #999;
 }
 
-/* Horizontal line connector */
+/* Horizontal line for folders */
 .archive-tree summary::after {
   content: "";
   position: absolute;
-  top: 12px; /* Centers with the text */
+  top: 12px;
   left: 0;
   width: 12px;
   border-top: 1px dotted #999;
 }
 
-/* Style the summary to move text away from the line */
 .archive-tree summary {
   list-style: none;
   position: relative;
   padding-left: 20px;
   cursor: pointer;
   user-select: none;
+  font-weight: 600; /* Makes folders distinct */
 }
 
-/* The Box (+/-) */
+/* The +/- Box */
 .archive-tree summary::before {
   content: "+";
   position: absolute;
   left: -5px;
   top: 6px;
-  width: 8px;
-  height: 8px;
-  line-height: 8px;
+  width: 10px;
+  height: 10px;
+  line-height: 9px;
   text-align: center;
-  background: white; /* Important: masks the vertical line behind the box */
+  background: white;
   border: 1px solid #999;
-  font-size: 12px;
+  font-size: 10px;
   z-index: 2;
 }
 
@@ -138,7 +135,7 @@ hr {
   content: "-";
 }
 
-/* The "Leaf" items (actual post links) */
+/* Leaf Items (The Links) */
 .archive-tree ul {
   list-style: none;
   margin: 0;
@@ -149,86 +146,45 @@ hr {
   position: relative;
   padding-left: 20px;
   border-left: 1px dotted #999;
+  min-height: 22px;
+  display: flex;
+  align-items: center;
 }
 
 .archive-tree li:last-child {
   border-left: none;
 }
 
-/* Horizontal line for the links */
+/* Horizontal line for links */
 .archive-tree li::after {
   content: "";
   position: absolute;
-  top: 12px;
+  top: 11px;
   left: 0;
   width: 12px;
   border-top: 1px dotted #999;
 }
 
-/* L-shape for the last link in a list */
+/* L-shape for last link */
 .archive-tree li:last-child::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
-  height: 12px;
+  height: 11px;
   border-left: 1px dotted #999;
 }
 
-/* Style for actual post links (the "leaves") */
-.archive-tree li a {
-  font-size: 0.85rem; /* Reduced font size */
-  line-height: 1.2;   /* Tighter line spacing */
-  text-decoration: none;
-  color: #0056b3;
-  display: inline-block; /* Helps with vertical alignment */
-  vertical-align: middle;
-}
-
-/* Adjust the list item height to match the new line height */
-.archive-tree li {
-  position: relative;
-  padding-left: 20px;
-  border-left: 1px dotted #999;
-  min-height: 20px;    /* Keeps the horizontal lines aligned */
-  display: flex;
-  align-items: center; /* Centers the text with the dotted line */
-}
-
-/* Ensure the horizontal line stays centered with the smaller text */
-.archive-tree li::after {
-  content: "";
-  position: absolute;
-  top: 10px; /* Adjusted from 12px to match smaller font */
-  left: 0;
-  width: 12px;
-  border-top: 1px dotted #999;
-}
-
-/* Adjust the L-shape for the last link */
-.archive-tree li:last-child::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 10px; /* Adjusted to match the new 'top' position */
-  border-left: 1px dotted #999;
-}
-
-/* Style for actual post links (the "leaves") */
+/* Link Styling */
 .archive-tree li a {
   font-size: 0.85rem;
   line-height: 1.2;
   text-decoration: none;
-  /* Change color to black (or inherit from your body text) */
   color: #333; 
-  display: inline-block;
-  vertical-align: middle;
-  transition: color 0.2s ease; /* Smooth color transition */
+  transition: color 0.2s ease;
 }
 
-/* Hover state for the links */
 .archive-tree li a:hover {
-  color: #0056b3; /* Or your preferred highlight color */
-  text-decoration: underline; /* Optional: adds an underline on hover */
+  color: #0056b3;
+  text-decoration: underline;
 }

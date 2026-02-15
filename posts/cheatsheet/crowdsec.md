@@ -15,3 +15,17 @@ docker exec crowdsec cscli decisions list
 docker exec crowdsec cscli alerts list
 docker exec -it crowdsec cscli metrics
 
+sample attack script
+
+for i in {1..2000}; do
+
+    for path in \
+    "/.env" "/.git/config" "/wp-config.php" "/config.php" "/.aws/credentials" \
+    "/.ssh/id_rsa" "/.env.local" "/.env.production" "/.git/HEAD" "/admin/.env" \
+    "/app/.env" "/src/.env" "/backup.sql" "/database.sql" "/db.php" \
+    "/.vscode/settings.json" "/.idea/workspace.xml" "/composer.json" "/package.json" "/.htaccess"; \
+        do 
+            curl -s -I -o /dev/null "https://myservice.mydomain.com$path"
+            echo "Attacked: $path"
+        done
+done

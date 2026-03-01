@@ -1,0 +1,49 @@
+---
+layout: layout.njk
+permalink: /posts/index.html
+eleventyExcludeFromCollections: true
+eleventyComputed:
+  title: "{{ collections.post[collections.post.length - 1].data.title }}"
+---
+
+{# 1. Identify the latest post object #}
+{% set latest = collections.post | last %}
+{% set allPosts = collections.post %}
+{% set prevIndex = allPosts.length - 2 %}
+{% set previousPost = allPosts[prevIndex] %}
+
+{# 2. Header: Manually matching your layout.njk structure #}
+<div style="margin-bottom: 20px; color: #666; font-size: 0.9rem;">
+  <span>{{ latest.date | postDate }}</span> • 
+  
+  {% for tag in latest.data.tags %}
+    {% if tag != "post" %}
+      <span style="background: #eee; padding: 2px 6px; border-radius: 4px; margin-right: 5px; color: #333;">
+        {{ tag }}
+      </span>
+    {% endif %}
+  {% endfor %}
+  
+  • <span>{{ latest.content | readTime }}</span>
+</div>
+
+{# 3. The Article Content #}
+<div class="post-content">
+  {{ latest.content | safe }}
+</div>
+
+<hr>
+
+{# 4. Navigation: Manually matching your layout.njk style #}
+<nav class="post-nav" style="display: flex; justify-content: space-between; margin-top: 20px;">
+  <div>
+    {% if previousPost %}
+      <strong>Previous:</strong><br>
+      <a href="{{ previousPost.url }}">{{ previousPost.data.title }}</a>
+    {% endif %}
+  </div>
+
+  <div style="text-align: right;">
+    <span style="color: #ccc;"><em>Viewing Latest Post</em></span>
+  </div>
+</nav>

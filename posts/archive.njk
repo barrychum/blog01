@@ -1,0 +1,31 @@
+---
+layout: layout.njk
+title: Blog Archive
+permalink: /archive/
+eleventyExcludeFromCollections: true
+---
+
+<h1 style="margin-bottom: 10px;">{{ title }}</h1>
+
+<ul class="post-list" style="padding: 0; margin: 0; list-style: none;">
+  {% for post in collections.post | reverse %}
+    <li style="margin: 0; padding: 0; line-height: 1.2; font-size: 0.9rem; display: flex; align-items: baseline;">
+      
+      {# Date with single-digit padding logic #}
+      <time style="color: #888; font-family: monospace; margin-right: 12px; white-space: pre; flex-shrink: 0;">
+        {%- set day = post.date.getDate() -%}
+        {%- if day < 10 -%}&nbsp;{%- endif -%}
+        {{ post.date | postDate }}
+      </time>
+
+      {# Title #}
+      <a href="{{ post.url }}" style="text-decoration: none; font-weight: 500; color: #333;">
+        {{ post.data.title }}
+      </a>
+      
+    </li>
+  {% endfor %}
+</ul>
+
+<hr style="margin-top: 1.5rem;">
+<p style="font-size: 0.85rem; margin-top: 10px;"><a href="/">← Back to Home</a></p>

@@ -4,6 +4,7 @@ date: 2026-02-11
 tags: 
   - "Cheatsheet/restic"
 ---
+{% raw %}
 docker run --rm \
   -v /mnt/omv/backup/dockerhost:/repo \
   -e RESTIC_REPOSITORY=/repo \
@@ -140,3 +141,4 @@ After saving that, you could simply run:
 `myrestic snapshots` or `myrestic backup /mnt/disk2/docker/authelia:/data:ro`
 
 **Would you like me to create a "Master Backup Script" that loops through all your folders and runs these commands automatically?**
+{% endraw %}

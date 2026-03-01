@@ -4,6 +4,7 @@ date: 2026-02-15
 tags: 
   - "Cheatsheet/vscode"
 ---
+{% raw %}
 Microsoft restricts its official Marketplace to its own products (the official VS Code, VS Code Insiders, and Azure Data Studio).
 
 By default, `code-server` uses **Open VSX**, an open-source alternative registry. While many extensions are there, some Microsoft-owned ones are legally or technically barred from being hosted on it.
@@ -54,3 +55,5 @@ Check [open-vsx.org](https://open-vsx.org/) first. Many popular community-mainta
 | **Gallery Variable** | High | ⚠️ Grey Area | High |
 
 **Would you like me to show you how to automate the installation of specific extensions in your Dockerfile so they are there every time you rebuild the container?**
+
+{% endraw %}

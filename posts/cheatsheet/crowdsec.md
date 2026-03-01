@@ -4,6 +4,7 @@ date: 2026-02-16
 tags: 
   - "Cheatsheet/crowdsec"
 ---
+{% raw %}
 docker exec crowdsec cscli bouncers list
 docker exec crowdsec cscli collections list
 docker exec -it crowdsec cscli scenarios list
@@ -29,3 +30,5 @@ for i in {1..2000}; do
             echo "Attacked: $path"
         done
 done
+
+{% endraw %}

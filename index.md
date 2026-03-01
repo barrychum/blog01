@@ -1,5 +1,12 @@
 ---
 layout: layout.njk
-title: My Home Page
+title: 11ty Home Page
 ---
-Welcome to my blog! This content is now wrapped in a nice layout.
+{% raw %}
+Welcome to my blog!
+
+You are test locally using
+```
+npx @11ty/eleventy --serve
+```
+{% endraw %}

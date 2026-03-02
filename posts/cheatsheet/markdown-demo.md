@@ -4,7 +4,6 @@ date: 2024-05-11
 tags: 
   - "Cheatsheet"
 ---
-# Markdown Cheat Sheet
 
 Thanks for visiting [The Markdown Guide](https://www.markdownguide.org)!
 

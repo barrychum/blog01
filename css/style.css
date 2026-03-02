@@ -277,3 +277,15 @@ section.sidebar-section {
   font-style: italic; /* Makes the tagline distinct */
   margin-top: -2px;   /* Pulls it slightly closer to the title */
 }
+
+
+
+.site-title {
+  font-family: "Nabla", system-ui;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "EDPT" 100,
+    "EHLT" 12;
+}

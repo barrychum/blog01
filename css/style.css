@@ -189,3 +189,71 @@ section.sidebar-section {
   margin-bottom: 0 !important;
   margin-top: 10px; 
 }
+
+
+
+/* Header Section */
+.site-header {
+  border-bottom: 1px solid #eee;
+  padding: 20px 0;
+  margin-bottom: 30px;
+  background-color: #fff;
+}
+
+.header-content {
+  max-width: 1000px; /* Match your body max-width */
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between; /* Logo left, Nav right */
+  align-items: center;
+}
+
+/* Branding Area */
+.branding {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.site-logo {
+  width: 50px; /* Adjust based on your logo size */
+  height: auto;
+}
+
+.site-title-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.site-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  line-height: 1.2;
+}
+
+.site-tagline {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+/* Navigation inside Header */
+.main-nav a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.main-nav a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+}

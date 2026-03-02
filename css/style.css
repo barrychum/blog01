@@ -257,3 +257,23 @@ section.sidebar-section {
     gap: 15px;
   }
 }
+
+
+
+/* Update the Site Title */
+.site-title {
+  font-family: 'Montserrat', sans-serif; /* Applied from Google Fonts */
+  font-size: 1.8rem; /* Slightly larger for impact */
+  font-weight: 700;
+  color: #222;
+  letter-spacing: -0.5px; /* Tighter look for bold titles */
+}
+
+/* Update the Tagline */
+.site-tagline {
+  font-family: 'Open Sans', sans-serif; /* Applied from Google Fonts */
+  font-size: 0.9rem;
+  color: #666;
+  font-style: italic; /* Makes the tagline distinct */
+  margin-top: -2px;   /* Pulls it slightly closer to the title */
+}

@@ -1,7 +1,7 @@
 const { DateTime } = require("luxon"); // 11ty usually comes with luxon
 
 module.exports = function(eleventyConfig) {
-
+eleventyConfig.addPassthroughCopy("img");
   eleventyConfig.addPassthroughCopy("css"); 
 
   // Date formatting filter

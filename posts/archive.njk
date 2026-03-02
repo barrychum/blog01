@@ -2,25 +2,22 @@
 layout: layout.njk
 title: Blog Archive
 permalink: /archive/
+noindex: true
 eleventyExcludeFromCollections: true
 ---
 
-{# 1. Override the layout's metadata variables #}
-{% set tags = [] %}
-{% set content = "" %} 
-
-{# 2. Manually build the list #}
 <ul class="post-list" style="padding: 0; margin: 0; list-style: none;">
   {% for post in collections.post | reverse %}
-    <li style="margin: 0; padding: 0; line-height: 1.2; font-size: 0.9rem; display: flex; align-items: baseline;">
+    <li style="margin-bottom: 0.1rem; padding: 0; display: flex; align-items: baseline;">
       
-      <time style="color: #888; font-family: monospace; margin-right: 12px; white-space: pre; flex-shrink: 0;">
+      {# The "Shrink-Wrapped" Time Box #}
+      <time style="color: #888; font-family: monospace; font-size: 0.8rem; margin-right: 12px; white-space: pre; flex-shrink: 0; line-height: 1; display: flex; align-items: center; height: 1em; margin-bottom: 0;">
         {%- set day = post.date.getDate() -%}
         {%- if day < 10 -%}&nbsp;{%- endif -%}
         {{ post.date | postDate }}
       </time>
 
-      <a href="{{ post.url }}" style="text-decoration: none; font-weight: 500; color: #333;">
+      <a href="{{ post.url }}" style="text-decoration: none; font-weight: 500; font-size: 0.95rem; color: #333; line-height: 1.2;">
         {{ post.data.title }}
       </a>
       
@@ -29,4 +26,4 @@ eleventyExcludeFromCollections: true
 </ul>
 
 <hr style="margin-top: 1.5rem;">
-<p style="font-size: 0.85rem; margin-top: 10px;"><a href="/">← Back to Home</a></p>
+<p style="font-size: 0.85rem;"><a href="/">← Back to Home</a></p>

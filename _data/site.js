@@ -3,7 +3,7 @@ module.exports = {
 };
 
 module.exports = {
-  url: process.env.ELEVENTY_ENV === 'production' 
-    ? "https://yourdomain.com" 
-    : "http://localhost:8080"
+  url: process.env.ELEVENTY_ENV === 'local' 
+    ? "http://localhost:8080" 
+    : "https://blog.britbuzz.uk"
 };

@@ -121,12 +121,5 @@ Works great with:
 
 MIT License — feel free to use and modify.
 
----
 
-If you'd like, I can also:
-
-* Make it more “marketable” for GitHub
-* Add badges
-* Add a demo section
-* Or write a short theme description for social sharing
 

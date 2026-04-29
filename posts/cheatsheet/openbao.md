@@ -6,17 +6,39 @@ tags:
 ---
 {% raw %}
 
-Setting up **OpenBao** behind **Traefik** is a powerful combination for a home lab or production environment. OpenBao handles your secrets, while Traefik manages the SSL/TLS termination and routing.
+Here's the corrected stack:
 
-### Architecture Overview
-In this setup, Traefik acts as the entry point ($80$/$443$). It will handle Let's Encrypt certificates and proxy traffic to the OpenBao container on port $8200$.
+```yaml
+services:
+  openbao:
+    image: openbao/openbao:latest
+    container_name: openbao
+    restart: unless-stopped
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - /mnt/disk2/docker/bao/config:/openbao/config
+      - /mnt/disk2/docker/bao/data:/openbao/data
+    environment:
+      - BAO_ADDR=http://0.0.0.0:8200
+    command: server -config=/openbao/config/config.hcl
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.openbao.rule=Host(`bao.britbuzz.uk`)"
+      - "traefik.http.routers.openbao.entrypoints=websecure"
+      - "traefik.http.routers.openbao.tls.certresolver=myresolver"
+      - "traefik.http.services.openbao.loadbalancer.server.port=8200"
 
-
+networks:
+  proxy:
+    external: true
+```
 
 ---
 
-### Step 1: Prepare the OpenBao Config (`config.hcl`)
-Create a folder named `openbao` and place this `config.hcl` inside a `config/` subfolder. This tells OpenBao to use file storage and trust the proxy.
+**Your `config.hcl`** at `/mnt/disk2/docker/bao/config/config.hcl` needs to exist before you deploy. Minimum working config:
 
 ```hcl
 storage "file" {
@@ -25,195 +47,229 @@ storage "file" {
 
 listener "tcp" {
   address     = "0.0.0.0:8200"
-  tls_disable = "true" # Traefik will handle TLS instead
+  tls_disable = true
 }
 
-# Important for Traefik to pass the real client IP
-proxy_protocol_behavior = "use_always"
 ui = true
 ```
 
+`tls_disable = true` is correct here — Traefik handles TLS externally, so the internal listener doesn't need it.
+
 ---
 
-### Step 2: The `docker-compose.yml`
-This file connects OpenBao to your Traefik network and defines the routing labels.
+**After deploying**, since this is production mode (not dev), you'll need to initialise and unseal once:
 
-```yaml
-version: '3.8'
+```bash
+# Init — run once, save the output somewhere safe
+curl -s --request POST \
+  --data '{"secret_shares":5,"secret_threshold":3}' \
+  https://bao.britbuzz.uk/v1/sys/init
 
-services:
-  openbao:
-    image: openbao/openbao:latest
-    container_name: openbao
-    restart: always
-    cap_add:
-      - IPC_LOCK
-    volumes:
-      - ./config:/openbao/config
-      - ./data:/openbao/data
-    environment:
-      - BAO_ADDR=http://127.0.0.1:8200
-    command: server -config=/openbao/config/config.hcl
-    networks:
-      - traefik_network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.openbao.rule=Host(`bao.example.com`)" # Change to your domain
-      - "traefik.http.routers.openbao.entrypoints=websecure"
-      - "traefik.http.routers.openbao.tls.certresolver=myresolver"
-      - "traefik.http.services.openbao.loadbalancer.server.port=8200"
+# Unseal — repeat 3 times with 3 different keys from the init output
+curl -s --request POST \
+  --data '{"key":"<unseal_key_N>"}' \
+  https://bao.britbuzz.uk/v1/sys/unseal
+```
 
-networks:
-  traefik_network:
-    external: true
+The init response gives you 5 unseal keys and a root token — store these securely, they cannot be recovered if lost.
+
+---
+
+When fully unsealed the response will show `"sealed": false`. You can also check status anytime:
+
+```bash
+curl -s https://bao.britbuzz.uk/v1/sys/seal-status | jq .
 ```
 
 ---
 
-### Step 3: Initialization (The "One-Time" Setup)
-Once you run `docker-compose up -d`, OpenBao will start but it will be **Sealed** (encrypted and inaccessible). You must initialize it.
+## 5 — Enable the KV secrets engine
 
-1.  **Initialize the Vault:**
-    ```bash
-    docker exec -it openbao bao operator init
-    ```
-    **CRITICAL:** This will spit out 5 "Unseal Keys" and 1 "Initial Root Token". Save these in a physical notebook or a different password manager immediately. If you lose these, your data is gone forever.
-
-2.  **Unseal the Vault:**
-    OpenBao requires 3 of the 5 keys to "unseal" every time the container restarts.
-    ```bash
-    docker exec -it openbao bao operator unseal <Key 1>
-    docker exec -it openbao bao operator unseal <Key 2>
-    docker exec -it openbao bao operator unseal <Key 3>
-    ```
+```bash
+curl -s --request POST \
+  --header "X-Vault-Token: <root_token>" \
+  --data '{"type":"kv","options":{"version":"2"}}' \
+  https://bao.britbuzz.uk/v1/sys/mounts/secret
+```
 
 ---
 
-### Step 4: Access the UI
-Now, navigate to `https://bao.example.com` in your browser. You should see the OpenBao login screen. Use your **Initial Root Token** to log in.
+## 6 — Write and read your first secret
 
-### 💡 Pro-Tips for 2026
-* **Auto-Unseal:** In production, manually entering keys is annoying. Look into "Transit Auto-unseal" if you have a second OpenBao instance, or use a KMS (Key Management Service) if you are on a cloud provider.
-* **Hardening:** Ensure your `data` volume is backed up regularly. Since it's encrypted, the backup is safe, but without those Unseal Keys, the backup is useless.
-* **Binary Name:** Remember that the command is `bao`, not `vault`. If you are following old tutorials, just swap the names.
+**Write:**
+```bash
+curl -s --request POST \
+  --header "X-Vault-Token: <root_token>" \
+  --data '{"data":{"username":"admin","password":"supersecret"}}' \
+  https://bao.britbuzz.uk/v1/secret/data/myapp/config
+```
 
-Does your Traefik setup already have a `certresolver` configured for Let's Encrypt, or do we need to add that to the compose file?
+**Read:**
+```bash
+curl -s \
+  --header "X-Vault-Token: <root_token>" \
+  https://bao.britbuzz.uk/v1/secret/data/myapp/config | jq .data.data
+```
 
 ---
 
-Works the same — you just hit **Traefik’s URL instead of localhost**. A few extra things matter though.
+## 7 — Access the UI
+
+Visit `https://bao.britbuzz.uk/ui` in your browser and log in with your root token. It's a full GUI for managing secrets, policies, and auth methods.
 
 ---
 
-## 🔑 Basic curl via Traefik
+## Important — after every container restart
 
-Assume:
+OpenBao re-seals itself on restart. You'll need to re-run the 3 unseal curl commands (Step 4) each time. If you want to automate this, look into **auto-unseal** using a cloud KMS or a transit seal — but manual unseal is fine to start with.
 
-* Bao exposed at `https://bao.example.com`
-* Traefik terminates TLS
+---
 
-### 1) Login
+
+That's a security feature — OpenBao (and Vault) prevent any auth method from issuing root-level tokens directly. You need to attach a policy instead.
+
+---
+
+## Step 1 — Create an admin policy
+
+```bash
+curl -s --request POST \
+  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  --data '{"policy":"path \"*\" { capabilities = [\"create\", \"read\", \"update\", \"delete\", \"list\", \"sudo\"] }"}' \
+  https://bao.britbuzz.uk/v1/sys/policies/acl/admin
+```
+
+This creates a policy called `admin` that has full access to everything — effectively the same as root but allowed via userpass.
+
+---
+
+## Step 2 — Create the user with the admin policy
+
+```bash
+curl -s --request POST \
+  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  --data '{"password":"yourpassword","token_policies":"admin"}' \
+  https://bao.britbuzz.uk/v1/auth/userpass/users/admin
+```
+
+---
+
+## Step 3 — Test the login
+
+```bash
+curl -s --request POST \
+  --data '{"password":"yourpassword"}' \
+  https://bao.britbuzz.uk/v1/auth/userpass/login/admin | jq .auth.client_token
+```
+
+You should get back a client token, and the UI login with username/password should now work without errors.
+
+---
+
+TOTP (Time-based One Time Password) in OpenBao works as a **secrets engine** that generates TOTP codes for you — it acts like an authenticator app (Google Authenticator, Authy etc). It's not used for logging *into* OpenBao itself, but rather for generating/validating TOTP codes for your *other* services.
+
+---
+
+## Step 1 — Enable the TOTP secrets engine
+
+```bash
+curl -s --request POST \
+  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  --data '{"type":"totp"}' \
+  https://bao.britbuzz.uk/v1/sys/mounts/totp
+```
+
+---
+
+## Step 2 — Create a TOTP key for a service
+
+This example creates a TOTP key for a service called `gmail`:
+
+```bash
+curl -s --request POST \
+  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  --data '{
+    "generate": true,
+    "issuer": "Gmail",
+    "account_name": "you@gmail.com"
+  }' \
+  https://bao.britbuzz.uk/v1/totp/keys/gmail | jq .
+```
+
+The response will include a `barcode` (base64 PNG) and a `url` (otpauth:// string):
+
+```json
+{
+  "data": {
+    "barcode": "iVBORw0KGgo...",
+    "url": "otpauth://totp/Gmail:you@gmail.com?secret=XXXX&issuer=Gmail"
+  }
+}
+```
+
+---
+
+## Step 3 — Scan the QR code or import the URL
+
+**Option A — decode the barcode to a PNG and scan it:**
+
+```bash
+curl -s --request POST \
+  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  --data '{"generate":true,"issuer":"Gmail","account_name":"you@gmail.com"}' \
+  https://bao.britbuzz.uk/v1/totp/keys/gmail | jq -r .data.barcode | base64 -d > totp-gmail.png
+```
+
+Then open `totp-gmail.png` and scan it with your authenticator app.
+
+**Option B — copy the `url` value** and paste it directly into an authenticator app that accepts otpauth:// URLs.
+
+---
+
+## Step 4 — Generate a TOTP code via curl
+
+Once set up, you can ask OpenBao to generate the current 6-digit code:
 
 ```bash
 curl -s \
-  --request POST \
-  --data '{"password":"YOUR_PASSWORD"}' \
-  https://bao.example.com/v1/auth/userpass/login/YOUR_USERNAME
+  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  https://bao.britbuzz.uk/v1/totp/code/gmail | jq .data.code
+```
+
+Returns:
+
+```json
+"123456"
 ```
 
 ---
 
-### 2) Read secret
+## Step 5 — Validate a TOTP code
+
+You can also use OpenBao to *validate* a code (useful in scripts):
 
 ```bash
-curl -s \
-  -H "X-Vault-Token: YOUR_TOKEN" \
-  https://bao.example.com/v1/secret/data/db/config
+curl -s --request POST \
+  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  --data '{"code":"123456"}' \
+  https://bao.britbuzz.uk/v1/totp/code/gmail | jq .data.valid
 ```
+
+Returns `true` or `false`.
 
 ---
 
-## ⚠️ Important gotchas (this is where people get stuck)
+## Summary of how it fits together
 
-### 1) `api_addr` must match public URL
+| What | Who holds the secret |
+|---|---|
+| Normal authenticator app | Your phone holds the TOTP seed |
+| OpenBao TOTP engine | OpenBao holds the TOTP seed, generates codes on demand |
 
-In OpenBao config:
-
-```hcl
-api_addr = "https://bao.example.com"
-```
-
-If wrong → redirects / auth issues
+The advantage of storing TOTP seeds in OpenBao is that you have a centralised, backed-up, audited store of all your 2FA secrets — useful for shared team accounts or server-to-server authentication where a phone isn't practical.
 
 ---
 
-### 2) Traefik headers (critical)
-
-Make sure Traefik forwards:
-
-* `Host`
-* `X-Forwarded-Proto`
-* `X-Forwarded-For`
-
-Otherwise Bao may think it’s HTTP and break redirects
-
----
-
-### 3) TLS / self-signed certs
-
-If using self-signed:
-
-```bash
-curl -k ...
-```
-
-or better:
-
-```bash
-curl --cacert ca.pem ...
-```
-
----
-
-### 4) Path prefixes (if using them)
-
-If Traefik exposes:
-
-```
-https://example.com/bao/
-```
-
-Then your API becomes:
-
-```
-https://example.com/bao/v1/secret/data/...
-```
-
-👉 Bao itself **does NOT understand prefixes**, so avoid this unless you rewrite paths in Traefik.
-
----
-
-### 5) CORS (only if browser)
-
-For curl → ignore
-For frontend apps → enable in Bao config
-
----
-
-## 👍 Minimal working mental model
-
-* Replace `http://127.0.0.1:8200` → your Traefik URL
-* Ensure `api_addr` matches
-* Ensure headers are forwarded
-
----
-
-If you want, paste your:
-
-* Traefik labels / config
-* Bao config
-
-I’ll spot misconfig quickly (this setup is easy to subtly break).
 
 
 {% endraw %}

@@ -87,7 +87,7 @@ curl -s https://bao.britbuzz.uk/v1/sys/seal-status | jq .
 
 ```bash
 curl -s --request POST \
-  --header "X-Vault-Token: <root_token>" \
+  --header "X-Vault-Token: $(jq -r '.root_token' init.json)" \
   --data '{"type":"kv","options":{"version":"2"}}' \
   https://bao.britbuzz.uk/v1/sys/mounts/secret
 ```
@@ -99,7 +99,7 @@ curl -s --request POST \
 **Write:**
 ```bash
 curl -s --request POST \
-  --header "X-Vault-Token: <root_token>" \
+  --header "X-Vault-Token: $(jq -r '.root_token' init.json)" \
   --data '{"data":{"username":"admin","password":"supersecret"}}' \
   https://bao.britbuzz.uk/v1/secret/data/myapp/config
 ```
@@ -107,7 +107,7 @@ curl -s --request POST \
 **Read:**
 ```bash
 curl -s \
-  --header "X-Vault-Token: <root_token>" \
+  --header "X-Vault-Token: $(jq -r '.root_token' init.json)" \
   https://bao.britbuzz.uk/v1/secret/data/myapp/config | jq .data.data
 ```
 
@@ -134,7 +134,7 @@ That's a security feature — OpenBao (and Vault) prevent any auth method from i
 
 ```bash
 curl -s --request POST \
-  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  --header "X-Vault-Token: $(jq -r '.root_token' init.json)" \
   --data '{"policy":"path \"*\" { capabilities = [\"create\", \"read\", \"update\", \"delete\", \"list\", \"sudo\"] }"}' \
   https://bao.britbuzz.uk/v1/sys/policies/acl/admin
 ```
@@ -147,7 +147,7 @@ This creates a policy called `admin` that has full access to everything — effe
 
 ```bash
 curl -s --request POST \
-  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  --header "X-Vault-Token: $(jq -r '.root_token' init.json)" \
   --data '{"password":"yourpassword","token_policies":"admin"}' \
   https://bao.britbuzz.uk/v1/auth/userpass/users/admin
 ```
@@ -174,7 +174,7 @@ TOTP (Time-based One Time Password) in OpenBao works as a **secrets engine** tha
 
 ```bash
 curl -s --request POST \
-  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  --header "X-Vault-Token: $(jq -r '.root_token' init.json)" \
   --data '{"type":"totp"}' \
   https://bao.britbuzz.uk/v1/sys/mounts/totp
 ```
@@ -187,7 +187,7 @@ This example creates a TOTP key for a service called `gmail`:
 
 ```bash
 curl -s --request POST \
-  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  --header "X-Vault-Token: $(jq -r '.root_token' init.json)" \
   --data '{
     "generate": true,
     "issuer": "Gmail",
@@ -215,7 +215,7 @@ The response will include a `barcode` (base64 PNG) and a `url` (otpauth:// strin
 
 ```bash
 curl -s --request POST \
-  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  --header "X-Vault-Token: $(jq -r '.root_token' init.json)" \
   --data '{"generate":true,"issuer":"Gmail","account_name":"you@gmail.com"}' \
   https://bao.britbuzz.uk/v1/totp/keys/gmail | jq -r .data.barcode | base64 -d > totp-gmail.png
 ```
@@ -232,7 +232,7 @@ Once set up, you can ask OpenBao to generate the current 6-digit code:
 
 ```bash
 curl -s \
-  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  --header "X-Vault-Token: $(jq -r '.root_token' init.json)" \
   https://bao.britbuzz.uk/v1/totp/code/gmail | jq .data.code
 ```
 
@@ -250,7 +250,7 @@ You can also use OpenBao to *validate* a code (useful in scripts):
 
 ```bash
 curl -s --request POST \
-  --header "X-Vault-Token: s.grGeqDTAOuPZeY7JnTbRBDah" \
+  --header "X-Vault-Token: $(jq -r '.root_token' init.json)" \
   --data '{"code":"123456"}' \
   https://bao.britbuzz.uk/v1/totp/code/gmail | jq .data.valid
 ```

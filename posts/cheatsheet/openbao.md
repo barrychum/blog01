@@ -143,6 +143,18 @@ This creates a policy called `admin` that has full access to everything — effe
 
 ---
 
+
+```bash
+curl -s --request POST \
+  --header "X-Vault-Token: $(jq -r '.root_token' init.json)" \
+  --data '{"type":"userpass"}' \
+  https://bao.britbuzz.uk/v1/sys/auth/userpass
+```
+
+
+---
+
+
 ## Step 2 — Create the user with the admin policy
 
 ```bash

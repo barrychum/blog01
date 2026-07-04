@@ -135,8 +135,22 @@ That's a security feature — OpenBao (and Vault) prevent any auth method from i
 ```bash
 curl -s --request POST \
   --header "X-Vault-Token: $(jq -r '.root_token' init.json)" \
-  --data '{"policy":"path \"*\" { capabilities = [\"create\", \"read\", \"update\", \"delete\", \"list\", \"sudo\"] }"}' \
+  --data '{"policy":"path \"*\" { capabilities = [\"create\", \"read\", \"update\", \"patch\", \"delete\", \"list\", \"scan\"] }"}' \
   https://bao.britbuzz.uk/v1/sys/policies/acl/admin
+
+path "*" { capabilities = ["create", "read", "update", "patch", "delete", "list", "scan", "sudo"] }
+
+# Explicit permission to manage Auth Methods
+path "sys/auth/*" {
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+# (Optional) If you also want to enable Secret Engines
+path "sys/mounts/*" {
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+
 ```
 
 This creates a policy called `admin` that has full access to everything — effectively the same as root but allowed via userpass.

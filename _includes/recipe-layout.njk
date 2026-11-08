@@ -1,0 +1,124 @@
+---
+layout: base-layout.njk
+---
+
+<!-- Inject your Markdown blog content -->
+<article class="post-content">
+  <h1>{{ title }}</h1>
+  {{ content | safe }}
+</article>
+
+<hr class="recipe-divider" />
+
+<!-- Interactive Recipe Card -->
+<div class="recipe-card" data-base-servings="{{ recipe.servings }}">
+  <div class="recipe-header">
+    <h2 class="recipe-title">{{ title }}</h2>
+    <p class="recipe-desc">{{ recipe.description }}</p>
+    
+    <div class="recipe-meta">
+      <span><strong>Prep:</strong> 10 mins</span>
+      <span><strong>Cook:</strong> 20 mins</span>
+      <span class="print-btn-container">
+        <button onclick="window.print()" class="recipe-btn print-btn">Print Recipe</button>
+      </span>
+    </div>
+  </div>
+
+  <!-- Interactive Serving Controls -->
+  <div class="servings-control">
+    <span class="servings-label">Servings:</span>
+    <div class="stepper">
+      <button onclick="adjustServings(-1)" class="step-btn" aria-label="Decrease servings">-</button>
+      <span id="serving-count" class="serving-display">{{ recipe.servings }}</span>
+      <button onclick="adjustServings(1)" class="step-btn" aria-label="Increase servings">+</button>
+    </div>
+  </div>
+
+  <div class="recipe-body">
+    <!-- Ingredients Section with Checkboxes -->
+    <div class="recipe-ingredients">
+      <h3>Ingredients</h3>
+      <ul class="ingredients-list">
+        {% for item in recipe.ingredients %}
+        <li>
+          <label class="ingredient-item">
+            <input type="checkbox" class="ingredient-checkbox">
+            <span class="ingredient-text">
+              <span class="qty" data-base-qty="{{ item.qty }}">{{ item.qty }}</span>{{ item.unit }} 
+              {{ item.name }}
+            </span>
+          </label>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Cooking Steps -->
+    <div class="recipe-instructions">
+      <h3>Instructions</h3>
+      <ol class="instructions-list">
+        {% for step in recipe.instructions %}
+        <li>
+          <p>{{ step }}</p>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- Light Interactive Scaling JavaScript -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const card = document.querySelector('.recipe-card');
+    if (!card) return;
+
+    const baseServings = parseInt(card.dataset.baseServings);
+    let currentServings = baseServings;
+
+    window.adjustServings = function(change) {
+      if (currentServings + change < 1) return;
+      currentServings += change;
+      
+      document.getElementById('serving-count').innerText = currentServings;
+      const ratio = currentServings / baseServings;
+
+      document.querySelectorAll('.qty').forEach(span => {
+        const baseQty = parseFloat(span.dataset.baseQty);
+        if (!isNaN(baseQty)) {
+          // Multiply, then round cleanly to max 2 decimal places
+          let rawValue = baseQty * ratio;
+          let roundedValue = Math.round(rawValue * 100) / 100;
+          span.innerText = roundedValue;
+        }
+      });
+    };
+  });
+</script>
+
+<!-- Structured SEO Schema for Search Engines -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Recipe",
+  "name": "{{ title }}",
+  "description": "{{ recipe.description }}",
+  "recipeYield": "{{ recipe.servings }} servings",
+  "prepTime": "{{ recipe.prepTime }}",
+  "cookTime": "{{ recipe.cookTime }}",
+  "recipeIngredient": [
+    {% for item in recipe.ingredients %}
+      "{{ item.qty }}{{ item.unit }} {{ item.name }}"{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ],
+  "recipeInstructions": [
+    {% for step in recipe.instructions %}
+      {
+        "@type": "HowToStep",
+        "text": "{{ step }}"
+      }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>

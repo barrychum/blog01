@@ -149,7 +149,7 @@ pre code {
 
 .archive-tree details {
   position: relative;
-  margin-left: 8px; /* ADJUST: Level indentation */
+  margin-left: 14px; /* ADJUST: Level indentation */
   border-left: 1px dotted #999;
 }
 

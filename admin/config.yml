@@ -10,7 +10,7 @@ collections:
   - name: posts
     label: Posts
     label_singular: Post
-    folder: posts            # <-- your actual posts folder
+    folder: posts/sveltia            # <-- your actual posts folder
     create: true
     extension: md
     format: frontmatter

@@ -1,0 +1,28 @@
+backend:
+  name: github
+  repo: barrychum/blog01
+  branch: main
+
+media_folder: img/uploads
+public_folder: /img/uploads
+
+collections:
+  - name: posts
+    label: Posts
+    label_singular: Post
+    folder: posts            # <-- your actual posts folder
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: date
+        label: Date
+        widget: datetime
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+      - { name: tags, label: Tags, widget: list, default: [post] }
+      - { name: layout, widget: hidden, default: layouts/post.njk }   # <-- match your layout
+      - { name: body, label: Body, widget: markdown }

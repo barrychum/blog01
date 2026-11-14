@@ -4,6 +4,13 @@ module.exports = function(eleventyConfig) {
 eleventyConfig.addPassthroughCopy("img");
   eleventyConfig.addPassthroughCopy("css"); 
 
+  // --- Sveltia CMS ---
+  eleventyConfig.addPassthroughCopy("admin");
+  eleventyConfig.addPassthroughCopy({
+    "node_modules/@sveltia/cms/dist/sveltia-cms.js": "admin/sveltia-cms.js",
+  });
+  // -------------------
+
   // Date formatting filter
   eleventyConfig.addFilter("postDate", (dateObj) => {
     return DateTime.fromJSDate(dateObj).toLocaleString(DateTime.DATE_MED);

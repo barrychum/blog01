@@ -3,3 +3,4 @@ _site/
 .DS_Store
 scripts/
 img/pano-test
+token.txt

@@ -29,5 +29,4 @@ collections:
       - name: body
         label: Body
         widget: markdown
-        modes: [raw]
         default: "{% raw %}\n\n{% endraw %}"

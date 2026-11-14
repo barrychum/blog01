@@ -24,5 +24,9 @@ collections:
         date_format: "YYYY-MM-DD"
         time_format: false
       - { name: tags, label: Tags, widget: list, default: [post] }
-      - { name: layout, widget: hidden, default: layouts/post.njk }   # <-- match your layout
-      - { name: body, label: Body, widget: markdown }
+      - { name: layout, widget: hidden, default: layouts/post.njk }
+      - { name: readSpeed, widget: hidden, default: 150 }
+      - name: body
+        label: Body
+        widget: markdown
+        default: "{% raw %}\n\n{% endraw %}"

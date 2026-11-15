@@ -1,0 +1,455 @@
+/******************************************
+  1. BASE STYLES & LAYOUT
+******************************************/
+body { 
+  font-family: sans-serif; 
+  max-width: 1000px; 
+  margin: 40px auto; 
+  padding: 0 20px; 
+  line-height: 1.6;
+  overflow-x: visible; /* Ensures browser scroll works */
+}
+
+.container { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 30px; 
+}
+
+/* Fix for flex-children containing pre tags */
+main {
+  min-width: 0; 
+}
+
+.container, 
+main, 
+.post-content {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+aside { 
+  border-top: 1px solid #eee; 
+  padding-top: 20px; 
+}
+
+@media (min-width: 768px) {
+  .container { flex-direction: row; }
+  main { flex: 2; } /* Wider main area */
+  aside { 
+    flex: 1; 
+    border-top: none; 
+    border-left: 1px solid #eee; 
+    padding-left: 20px; 
+    padding-top: 0;
+    min-width: 300px; /* Keeps sidebar wide enough for titles */
+  }
+}
+
+/******************************************
+  2. SITE HEADER & BRANDING
+******************************************/
+.site-header {
+  border-bottom: 1px solid #eee;
+  padding: 20px 0;
+  margin-bottom: 30px;
+  background-color: #fff;
+}
+
+.header-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.branding {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.site-logo {
+  width: 50px;
+  height: auto;
+}
+
+.site-title-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.site-title {
+  font-family: "Nabla", system-ui; /* Custom font choice */
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: #222;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  font-variation-settings: "EDPT" 100, "EHLT" 12;
+}
+
+.site-tagline {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.9rem;
+  color: #666;
+  font-style: italic;
+  margin-top: -2px;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+}
+
+/******************************************
+  3. CODE BLOCKS (SCROLLABLE)
+******************************************/
+pre {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto; /* Internal horizontal scroll */
+  white-space: pre;
+  background: #f4f4f4;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box; /* Includes padding in width */
+  margin: 20px 0;
+}
+
+pre code {
+  display: inline-block;
+  min-width: 100%;
+  white-space: pre;
+  word-wrap: normal;
+}
+
+/******************************************
+  4. ARCHIVE TREE
+******************************************/
+.archive-tree {
+  padding-left: 0;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.archive-tree details {
+  position: relative;
+  margin-left: 8px; /* ADJUST: Level indentation */
+  border-left: 1px dotted #999;
+}
+
+.archive-tree summary {
+  list-style: none;
+  position: relative;
+  padding-left: 14px; /* ADJUST: Space after +/- box */
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+}
+
+/* The +/- Box */
+.archive-tree summary::before {
+  content: "+";
+  position: absolute;
+  left: -7px;      
+  top: 4px;        
+  width: 10px;     
+  height: 10px;    
+  line-height: 10px; 
+  text-align: center;
+  background: white;
+  border: 1px solid #999;
+  font-size: 12px;   
+  font-weight: bold;
+  z-index: 2;
+}
+
+.archive-tree details[open] > summary::before {
+  content: "--"; 
+  line-height: 11px; 
+}
+
+/* Horizontal Connector Lines */
+.archive-tree summary::after,
+.archive-tree li::after {
+  content: "";
+  position: absolute;
+  left: -1px;      
+  width: 11px;     /* ADJUST: Line length */
+  border-top: 1px dotted #999;
+}
+
+.archive-tree summary::after { top: 12px; }
+.archive-tree li::after { top: 11px; }
+
+.archive-tree ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 8px;
+}
+
+.archive-tree li {
+  position: relative;
+  padding-left: 12px;
+  border-left: 1px dotted #999;
+  min-height: 22px;
+  display: flex;
+  align-items: center;
+}
+
+/* Last-item L-shape */
+.archive-tree details:last-child, 
+.archive-tree li:last-child {
+  border-left: none;
+}
+
+.archive-tree details:last-child::before,
+.archive-tree li:last-child::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -1px;
+  border-left: 1px dotted #999;
+}
+.archive-tree details:last-child::before { height: 12px; }
+.archive-tree li:last-child::before { height: 11px; }
+
+/******************************************
+  5. UI COMPONENTS
+******************************************/
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.post-nav a { font-size: 0.9rem; color: #555; text-decoration: none; }
+.post-nav a:hover { color: #007bff; text-decoration: underline; }
+.post-nav strong { font-size: 0.75rem; color: #999; text-transform: uppercase; }
+
+hr { margin: 20px 0 10px 0; border: 0; border-top: 1px solid #eee; }
+.post-list { list-style: none; padding: 0; margin: 0; }
+section.sidebar-section h3 { margin-bottom: 0 !important; margin-top: 10px; }
+
+
+/* 1. Update the overall page limit */
+body { 
+  font-family: sans-serif; 
+  max-width: 1200px; /* Increased from 1000px */
+  margin: 40px auto; 
+  padding: 0 20px; 
+  line-height: 1.6;
+  overflow-x: visible; 
+}
+
+/* 2. Update the header to match the new width */
+.header-content {
+  max-width: 1200px; /* Increased from 1000px */
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 3. Re-balance the Flexbox Ratio (Optional) */
+@media (min-width: 768px) {
+  .container { flex-direction: row; }
+  
+  /* Giving 'main' more weight helps use the extra space for content */
+  main { flex: 3; } 
+  
+  aside { 
+    flex: 1; 
+    min-width: 280px; /* Slightly narrower sidebar to favor content */
+    border-left: 1px solid #eee; 
+    padding-left: 20px; 
+  }
+}
+
+/* Update the Layout Ratio */
+@media (min-width: 768px) {
+  .container { flex-direction: row; }
+  
+  main { 
+    flex: 1; /* Takes up all remaining space */
+    min-width: 0; 
+  }
+  
+  aside { 
+    width: 250px;      /* Narrowed from the previous flexible width */
+    flex-shrink: 0;    /* Prevents sidebar from being squeezed */
+    border-top: none; 
+    border-left: 1px solid #eee; 
+    padding-left: 15px; /* Slightly tighter padding */
+    padding-top: 0;
+  }
+}
+
+/******************************************
+  ARCHIVE TREE TYPOGRAPHY
+******************************************/
+
+/* Folder Header Text (Year/Month) */
+.archive-tree summary {
+  list-style: none;
+  position: relative;
+  padding-left: 14px;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 500;    /* Reduced from 600 for a lighter look */
+  font-size: 0.85rem;  /* Smaller font size for tree categories */
+  color: #444;
+}
+
+/* Specific styling for the Year (the first level summary) */
+.archive-tree > details > summary {
+  font-size: 0.95rem;  /* Slightly larger than months, but smaller than 1rem */
+  font-weight: 600;
+  color: #222;
+}
+
+/* Post Titles (the links) */
+.archive-tree li a {
+  font-size: 0.8rem;   /* Smallest font for the actual post links */
+  line-height: 1.3;
+  color: #555;
+}
+
+@media (min-width: 768px) {
+  .container { 
+    display: flex;
+    flex-direction: row; 
+  }
+  
+  main { 
+    flex: 4;           /* 80% width */
+    min-width: 0;      /* Essential for code scrollbars */
+  }
+  
+  aside { 
+    flex: 1;           /* 20% width */
+    border-top: none; 
+    border-left: 1px solid #eee; 
+    padding-left: 20px; 
+    padding-top: 0;
+  }
+}
+
+
+/******************************************
+  ARCHIVE TREE TYPOGRAPHY
+******************************************/
+
+/* Folder Header Text (Year/Month) */
+.archive-tree summary {
+  list-style: none;
+  position: relative;
+  padding-left: 14px;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: #444;
+  text-decoration: none; /* Removes underline */
+  transition: color 0.2s ease;
+}
+
+/* Hover effect for Folders */
+.archive-tree summary:hover {
+  color: #007bff; /* Turns blue on hover */
+  text-decoration: none; /* Ensures no underline appears on hover */
+}
+
+/* Specific styling for the Year (the first level summary) */
+.archive-tree > details > summary {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #222;
+}
+
+/* Post Titles (the links) */
+.archive-tree li a {
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+/* Hover effect for Post Titles */
+.archive-tree li a:hover {
+  color: #007bff;
+  text-decoration: underline; /* Keeps underline for posts to distinguish from folders */
+}
+
+/******************************************
+  FINAL LAYOUT RATIO (4:1)
+******************************************/
+
+
+@media (min-width: 768px) {
+  .container { 
+    display: flex;
+    flex-direction: row; 
+    align-items: flex-start; /* Prevents sidebar from stretching height-wise */
+  }
+  
+  main { 
+    flex: 4 1 0;      
+    min-width: 0;      
+  }
+  
+  aside { 
+    flex: 1 1 0;      
+    min-width: 0;      /* CRITICAL: Allows the sidebar to shrink below content size */
+    border-top: none; 
+    border-left: 1px solid #eee; 
+    padding-left: 15px; 
+    padding-top: 0;
+  }
+
+  /* Force search input to stay within the narrowing sidebar */
+  #search-input {
+    width: 100%;
+    min-width: 0; 
+    box-sizing: border-box;
+  }
+
+  /* Prevent long post titles from pushing the sidebar wide */
+  .archive-tree li a {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds '...' if text is too long */
+    white-space: nowrap;
+  }
+}
+
+/******************************************
+  TAG LEAF INDENT FIX
+******************************************/
+.archive-tree > details > ul {
+  margin-left: 14px;
+}
+
+/* only images from img/uploads get resized */
+.post-content img[src*="/img/uploads/"] {
+  display: block;
+  max-width: 80%;
+  height: auto;
+  margin: 1em auto;
+}

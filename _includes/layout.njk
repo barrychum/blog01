@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="source-path" content="{{ page.inputPath }}">
+{% if noindex %}
+  <meta name="robots" content="noindex, follow">
+{% endif %}
+  <title>{{ title }}</title>
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:ital@0;1&display=swap" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Nabla&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-content">
+      <div class="branding">
+        <img src="/img/logo.png" alt="Logo" class="site-logo">
+        <div class="site-title-area">
+          <span class="site-title">My Tech Blog</span>
+          <span class="site-tagline">Insights on self-hosting and dev</span>
+        </div>
+      </div>
+      
+      <nav class="main-nav">
+        <a href="/">Home</a> | 
+        <a href="/about/">About</a> | 
+        <a href="/posts/">Recent</a> | 
+        <a href="/posts/pano/">Pano</a> | 
+        <a href="/archive/">Archive</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+
+<main>
+
+
+
+<h1>{{ title }}</h1>
+
+{# Check if 'post' is in the tags array safely #}
+{% if tags and "post" in tags %}
+  <div style="margin-bottom: 20px; color: #666; font-size: 0.9rem;">
+    {# 1. Print Date #}
+    <span>{{ page.date | postDate }}</span>
+
+    {# 2. Check for extra tags before printing the first dot #}
+    {% set hasExtraTags = false %}
+    {% for tag in tags %}
+      {% if tag != "post" %}{% set hasExtraTags = true %}{% endif %}
+    {% endfor %}
+
+    {% if hasExtraTags %}
+      • 
+      {% for tag in tags %}
+        {% if tag != "post" %}
+          <span style="background: #eee; padding: 2px 6px; border-radius: 4px; margin-right: 5px; color: #333;">
+            {{ tag }}
+          </span>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {# 3. Print Read Time with its own leading dot #}
+    • <span>{{ content | readTime }}</span>
+  </div>
+{% endif %}
+
+{# Ensure content is always rendered #}
+<div class="post-content">
+  {{ content | safe }}
+</div>
+
+  <hr>
+
+  {# Pagination Logic #}
+  {% if tags and "post" in tags %}
+    <nav class="post-nav">
+      {% set previousPost = collections.post | getPreviousCollectionItem(page) %}
+      {% set nextPost = collections.post | getNextCollectionItem(page) %}
+
+      <div>
+        {% if previousPost %}
+          <strong>Previous:</strong><br>
+          <a href="{{ previousPost.url }}">{{ previousPost.data.title }}</a>
+        {% endif %}
+      </div>
+
+      <div style="text-align: right;">
+        {% if nextPost %}
+          <strong>Next:</strong><br>
+          <a href="{{ nextPost.url }}">{{ nextPost.data.title }}</a>
+        {% endif %}
+      </div>
+    </nav>
+  {% endif %}
+</main>
+
+<aside>
+
+<h3>Search</h3>
+  <input type="text" id="search-input" placeholder="Type to search..." style="width: 100%; padding: 8px; box-sizing: border-box; margin-bottom: 10px;">
+  <ul id="search-results" class="post-list" style="display: none; background: #f9f9f9; padding: 10px; border: 1px solid #ddd;"></ul>
+
+  <hr>
+
+  <section class="sidebar-section">
+  <h3>Archive</h3>
+  <div class="archive-tree">
+    {# Apply our new filter to the post collection #}
+    {% set archivedPosts = collections.post | groupByYearMonth %}
+    
+    {% for year, months in archivedPosts | dictsort | reverse %}
+      <!-- <details open> -->
+      <details>
+        <summary><strong>{{ year }}</strong></summary>
+        <div style="margin-left: 15px;">
+          {% for month, posts in months %}
+            <details>
+              <summary>{{ month }} ({{ posts.length }})</summary>
+              <ul class="post-list" style="margin-left: 15px;">
+                {% for post in posts | reverse %}
+                  <li><a href="{{ post.url }}">{{ post.data.title }}</a></li>
+                {% endfor %}
+              </ul>
+            </details>
+          {% endfor %}
+        </div>
+      </details>
+    {% endfor %}
+  </div>
+
+
+  <section class="sidebar-section">
+    <h3>Tags</h3>
+    <div class="archive-tree">
+{% macro renderTag(name, data) %}
+  <details>
+    <summary>{{ name }}</summary>
+    {# Child Tags #}
+    {% for childName, childData in data._children %}
+      {{ renderTag(childName, childData) }}
+    {% endfor %}
+
+    {# Posts #}
+    {% if data._posts.length > 0 %}
+      <ul>
+        {% for post in data._posts %}
+          <li><a href="{{ post.url }}">{{ post.data.title }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </details>
+{% endmacro %}
+
+      {% set tagTree = collections | groupTagsByPath(collections) %}
+      {% for tagName, tagData in tagTree %}
+        {{ renderTag(tagName, tagData) }}
+      {% endfor %}
+    </div>
+  </section>
+
+  <hr>
+
+</aside>
+
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+
+<script>
+const searchInput = document.getElementById('search-input');
+  const resultsList = document.getElementById('search-results');
+  let fuse;
+
+  // 1. Fetch the index and initialize Fuse
+  fetch('/search.json')
+    .then(response => response.json())
+    .then(data => {
+      fuse = new Fuse(data, {
+        keys: ['title', 'tags', 'date'], // The fields to search in
+        threshold: 0.3, // 0.0 = perfect match, 1.0 = match anything. 0.3 is the "sweet spot"
+        useExtendedSearch: true, // This is the key for specific path searching
+        distance: 100   // How far the typo can be from the original word
+      });
+    });
+
+  // 2. Perform Fuzzy Search
+  searchInput.addEventListener('input', (e) => {
+    const term = e.target.value;
+    resultsList.innerHTML = '';
+    
+    if (term.length < 2) {
+      resultsList.style.display = 'none';
+      return;
+    }
+
+    // Use Fuse to search
+    const results = fuse.search(term);
+
+    if (results.length > 0) {
+      resultsList.style.display = 'block';
+      results.forEach(result => {
+        const post = result.item; // Fuse wraps results in an 'item' object
+        const li = document.createElement('li');
+        const tagList = Array.isArray(post.tags) 
+                        ? post.tags.filter(t => t !== 'post').join(', ') 
+                        : '';
+                        
+        li.innerHTML = `
+          <a href="${post.url}">${post.title}</a><br>
+          <small>${post.date} ${tagList ? 'in ' + tagList : ''}</small>
+        `;
+        resultsList.appendChild(li);
+      });
+    } else {
+      resultsList.style.display = 'block';
+      resultsList.innerHTML = '<li>No matches found</li>';
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -5,7 +5,7 @@ title: 11ty Home Page
 {% raw %}
 Welcome to my blog!
 
-You are test locally using
+You can test locally using
 ```
 npx @11ty/eleventy --serve
 ```

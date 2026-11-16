@@ -3,6 +3,7 @@ title: My Panorama Collection
 date: 2026-03-04
 tags: ["post", "photography", "panorama"]
 ---
+{% raw %}
 # Panorama Demos
 
 Experiments with 360° panorama viewers, using the test images in `/img/pano-test/`.
@@ -16,3 +17,4 @@ Experiments with 360° panorama viewers, using the test images in `/img/pano-tes
 ## Pannellum
 
 - [Viewport demo](/pano/pannellum_viewport/)
+{% endraw %}

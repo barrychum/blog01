@@ -3,6 +3,7 @@ const { DateTime } = require("luxon"); // 11ty usually comes with luxon
 module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({"src/img": "img"});
   eleventyConfig.addPassthroughCopy({"src/css": "css"});
+  eleventyConfig.addPassthroughCopy({"src/js": "js"});
 
   // --- Sveltia CMS ---
   // eleventyConfig.addPassthroughCopy("admin");

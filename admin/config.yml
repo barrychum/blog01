@@ -3,7 +3,7 @@ backend:
   repo: barrychum/blog01
   branch: main
 
-media_folder: img/uploads
+media_folder: src/img/uploads
 public_folder: /img/uploads
 
 collections:

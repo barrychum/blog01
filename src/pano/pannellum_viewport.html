@@ -226,6 +226,12 @@
         const basePath = '/img/pano-test/';
 
         viewer = pannellum.viewer('panorama', {
+            title: 'My 360° Panorama',
+            author: 'Your Name',
+            northOffset: 130,
+            pitch: 0,
+            yaw: 0,
+            hfov: 100,
             type: 'cubemap',
             cubeMap: [
                 basePath + '0.jpg',
@@ -235,7 +241,6 @@
                 basePath + '4.jpg',
                 basePath + '5.jpg'
             ],
-            northOffset: 130,
             autoLoad: true,
             autoRotate: 2,
             autoRotateInactivityDelay: 2000,
@@ -290,9 +295,7 @@
                 compass: true,
                 mouseZoom: true,
                 draggable: true,
-                friction: 0.15,
-    "title": "ALMA Correlator Facility",
-    "author": "Matthew Petroff"
+                friction: 0.15
             };
 
             if (panoTypeSelect.value === 'cubemap') {

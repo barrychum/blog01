@@ -5,7 +5,8 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({"src/css": "css"});
 
   // --- Sveltia CMS ---
-  eleventyConfig.addPassthroughCopy("admin");
+  // eleventyConfig.addPassthroughCopy("admin");
+  eleventyConfig.addPassthroughCopy({"src/admin": "admin"});
   eleventyConfig.addPassthroughCopy({
     "node_modules/@sveltia/cms/dist/sveltia-cms.js": "admin/sveltia-cms.js",
   });

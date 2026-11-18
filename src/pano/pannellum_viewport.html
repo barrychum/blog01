@@ -79,7 +79,10 @@ eleventyExcludeFromCollections: true
         }
 
         .back {
-            color: inherit;
+            display: inline-block;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #333;
             text-decoration: none;
         }
 
@@ -113,11 +116,10 @@ eleventyExcludeFromCollections: true
 </head>
 <body>
     <div class="container">
+        <a class="back" href="{{ '/pano/' | url }}">← Panoramas</a>
         <div id="panorama"></div>
 
         <div class="controls">
-            <a class="back" href="{{ '/pano/' | url }}">← Panoramas</a>
-
             <label>Height
                 <input type="range" id="heightSlider" min="30" max="90" value="90" step="5">
                 <span id="heightValue">90%</span>

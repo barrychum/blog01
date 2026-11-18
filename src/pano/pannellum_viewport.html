@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pannellum - Auto-Load</title>
     <link rel="stylesheet" href="/css/pannellum.css">
     <script src="/js/pannellum.js"></script>
-    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.css">-->
-    <!--<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.js"></script>-->
     <style>
         * {
             margin: 0;
@@ -17,6 +14,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: #f5f5f5;
+            color: #555;
             padding: 20px;
         }
 
@@ -25,87 +23,63 @@
             margin: 0 auto;
         }
 
-        .viewer-wrapper {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
         #panorama {
             width: 100%;
             height: 500px;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         .controls {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .controls h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .input-group label {
-            display: block;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px 32px;
+            padding: 16px 4px;
             font-size: 13px;
-            margin-bottom: 5px;
-            color: #666;
-            font-weight: 500;
         }
 
-        input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
+        .controls label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         input[type="range"] {
-            width: 100%;
+            width: 140px;
+            accent-color: #333;
         }
 
-        .size-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
+        input[type="number"] {
+            width: 56px;
+            padding: 2px 0;
+            border: none;
+            border-bottom: 1px solid #bbb;
+            background: transparent;
+            font: inherit;
+            color: inherit;
+            text-align: center;
         }
 
-        .button-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+        input[type="number"]:focus {
+            outline: none;
+            border-bottom-color: #333;
         }
 
         button {
-            background: #2196F3;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
+            margin-left: auto;
+            padding: 6px 16px;
+            border: 1px solid #bbb;
+            border-radius: 999px;
+            background: transparent;
+            font: inherit;
+            color: inherit;
             cursor: pointer;
-            font-size: 14px;
-            width: 100%;
-            font-weight: 500;
         }
 
         button:hover {
-            background: #0b7dda;
-        }
-
-        .info {
-            font-size: 12px;
-            color: #888;
-            margin-top: 15px;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 4px;
+            border-color: #333;
+            color: #333;
         }
 
         @media (max-width: 768px) {
@@ -113,46 +87,26 @@
                 height: 300px;
             }
 
-            .size-controls,
-            .button-group {
-                grid-template-columns: 1fr;
+            button {
+                margin-left: 0;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="viewer-wrapper">
-            <div id="panorama"></div>
-        </div>
+        <div id="panorama"></div>
 
         <div class="controls">
-            <h3>Configuration</h3>
+            <label>Height
+                <input type="range" id="heightSlider" min="200" max="800" value="500" step="50">
+            </label>
 
-            <div class="size-controls">
-                <div class="input-group">
-                    <label>Viewer Height: <span id="heightValue">500px</span></label>
-                    <input type="range" id="heightSlider" min="200" max="800" value="500" step="50">
-                </div>
+            <label>Speed
+                <input type="number" id="rotateSpeed" min="-10" max="10" step="0.5" value="2">°/s
+            </label>
 
-                <div class="input-group">
-                    <label>Auto-Rotate Speed:</label>
-                    <input type="number" id="rotateSpeed" min="-10" max="10" step="0.5" value="2" placeholder="2">
-                    <small style="color: #888;">Degrees/second (-10 to 10)</small>
-                </div>
-            </div>
-
-            <div class="button-group">
-                <button id="startRotateBtn">Start Rotate</button>
-                <button id="stopRotateBtn">Stop Rotate</button>
-            </div>
-
-            <div class="info">
-                💡 <strong>Pannellum Features:</strong><br>
-                • Automatically loads on page load (no click needed)<br>
-                • Built-in auto-rotate with speed control<br>
-                • Auto-resume rotation after user interaction
-            </div>
+            <button id="rotateBtn">Pause</button>
         </div>
     </div>
 
@@ -186,23 +140,33 @@
     });
 
     const panoElement = document.getElementById('panorama');
-    const heightSlider = document.getElementById('heightSlider');
-    const heightValue = document.getElementById('heightValue');
-    const rotateSpeedInput = document.getElementById('rotateSpeed');
+    const speedInput = document.getElementById('rotateSpeed');
+    const rotateBtn = document.getElementById('rotateBtn');
 
-    heightSlider.addEventListener('input', function() {
-        const height = this.value + 'px';
-        panoElement.style.height = height;
-        heightValue.textContent = height;
+    const speed = () => parseFloat(speedInput.value) || 2;
+    const syncButton = () => {
+        rotateBtn.textContent = viewer.isAutoRotationActive() ? 'Pause' : 'Rotate';
+    };
+
+    document.getElementById('heightSlider').addEventListener('input', function() {
+        panoElement.style.height = this.value + 'px';
     });
 
-    document.getElementById('startRotateBtn').addEventListener('click', function() {
-        viewer.startAutoRotate(parseFloat(rotateSpeedInput.value) || 2);
+    speedInput.addEventListener('change', function() {
+        if (viewer.isAutoRotationActive()) viewer.startAutoRotate(speed());
     });
 
-    document.getElementById('stopRotateBtn').addEventListener('click', function() {
-        viewer.stopAutoRotate();
+    rotateBtn.addEventListener('click', function() {
+        if (viewer.isAutoRotationActive()) {
+            viewer.stopAutoRotate();
+        } else {
+            viewer.startAutoRotate(speed());
+        }
+        syncButton();
     });
+
+    // Keep the label accurate when rotation stops/resumes on drag or inactivity
+    setInterval(syncButton, 500);
 </script>
 
 </body>

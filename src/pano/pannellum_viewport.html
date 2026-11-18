@@ -9,27 +9,22 @@
     <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.css">-->
     <!--<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.js"></script>-->
     <style>
-        * { 
-            margin: 0; 
-            padding: 0; 
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
-        body { 
+        body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: #f5f5f5;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
-        
-        h1 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        
+
         .viewer-wrapper {
             background: white;
             border-radius: 8px;
@@ -37,28 +32,24 @@
             overflow: hidden;
             margin-bottom: 20px;
         }
-        
+
         #panorama {
             width: 100%;
             height: 500px;
         }
-        
+
         .controls {
             background: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        
+
         .controls h3 {
             margin-bottom: 15px;
             color: #333;
         }
-        
-        .input-group {
-            margin-bottom: 15px;
-        }
-        
+
         .input-group label {
             display: block;
             font-size: 13px;
@@ -66,41 +57,34 @@
             color: #666;
             font-weight: 500;
         }
-        
-        input[type="text"],
-        input[type="number"],
-        select {
+
+        input[type="number"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 14px;
         }
-        
+
+        input[type="range"] {
+            width: 100%;
+        }
+
         .size-controls {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-bottom: 15px;
         }
-        
-        input[type="range"] {
-            width: 100%;
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
-        
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .checkbox-group input[type="checkbox"] {
-            width: auto;
-        }
-        
+
         button {
-            background: #4CAF50;
+            background: #2196F3;
             color: white;
             border: none;
             padding: 12px 24px;
@@ -109,21 +93,12 @@
             font-size: 14px;
             width: 100%;
             font-weight: 500;
-            margin-bottom: 10px;
         }
-        
+
         button:hover {
-            background: #45a049;
-        }
-        
-        button.secondary {
-            background: #2196F3;
-        }
-        
-        button.secondary:hover {
             background: #0b7dda;
         }
-        
+
         .info {
             font-size: 12px;
             color: #888;
@@ -132,18 +107,12 @@
             background: #f9f9f9;
             border-radius: 4px;
         }
-        
-        .button-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        
+
         @media (max-width: 768px) {
             #panorama {
                 height: 300px;
             }
-            
+
             .size-controls,
             .button-group {
                 grid-template-columns: 1fr;
@@ -153,178 +122,86 @@
 </head>
 <body>
     <div class="container">
-        <h1>Pannellum - Auto-Rotate & Viewport</h1>
-        
         <div class="viewer-wrapper">
             <div id="panorama"></div>
         </div>
-        
+
         <div class="controls">
             <h3>Configuration</h3>
-            
-            <div class="input-group">
-                <label>Panorama Type:</label>
-                <select id="panoType">
-                    <option value="cubemap">Cubemap (6 images: 0-5.jpg)</option>
-                    <option value="equirectangular">Equirectangular (single image)</option>
-                </select>
-            </div>
-            
-            <div class="input-group" id="cubePathGroup">
-                <label>Cubemap folder path:</label>
-                <input type="text" id="basePath" placeholder="./ or /path/to/images/" value="/img/pano-test/">
-            </div>
-            
-            <div class="input-group" id="equirectGroup" style="display: none;">
-                <label>Equirectangular image URL:</label>
-                <input type="text" id="equirectUrl" placeholder="path/to/panorama.jpg" value="">
-            </div>
-            
+
             <div class="size-controls">
                 <div class="input-group">
                     <label>Viewer Height: <span id="heightValue">500px</span></label>
                     <input type="range" id="heightSlider" min="200" max="800" value="500" step="50">
                 </div>
-                
+
                 <div class="input-group">
                     <label>Auto-Rotate Speed:</label>
                     <input type="number" id="rotateSpeed" min="-10" max="10" step="0.5" value="2" placeholder="2">
                     <small style="color: #888;">Degrees/second (-10 to 10)</small>
                 </div>
             </div>
-            
-            <div class="checkbox-group">
-                <input type="checkbox" id="autoRotate" checked>
-                <label for="autoRotate" style="margin: 0;">Enable auto-rotate</label>
-            </div>
-            
-            <div class="checkbox-group">
-                <input type="checkbox" id="autoResumeRotate" checked>
-                <label for="autoResumeRotate" style="margin: 0;">Auto-resume rotation after interaction</label>
-            </div>
-            
-            <button id="loadBtn">Reload Panorama</button>
-            
+
             <div class="button-group">
-                <button id="startRotateBtn" class="secondary">Start Rotate</button>
-                <button id="stopRotateBtn" class="secondary">Stop Rotate</button>
+                <button id="startRotateBtn">Start Rotate</button>
+                <button id="stopRotateBtn">Stop Rotate</button>
             </div>
-            
+
             <div class="info">
                 💡 <strong>Pannellum Features:</strong><br>
                 • Automatically loads on page load (no click needed)<br>
                 • Built-in auto-rotate with speed control<br>
-                • Auto-resume rotation after user interaction<br>
-                • Supports both cubemap and equirectangular
+                • Auto-resume rotation after user interaction
             </div>
         </div>
     </div>
 
 <script>
-    let viewer = null;
+    const basePath = '/img/pano-test/';
 
-    // Initial load (cubemap, auto-rotating)
-    (function() {
-        const basePath = '/img/pano-test/';
+    const viewer = pannellum.viewer('panorama', {
+        title: 'Grand Horizon, Tsingyi, Hongkong',
+        author: 'Barry, Sep 2007',
+        northOffset: 130,
+        pitch: 0,
+        yaw: 0,
+        hfov: 100,
+        type: 'cubemap',
+        cubeMap: [
+            basePath + '0.jpg',
+            basePath + '1.jpg',
+            basePath + '2.jpg',
+            basePath + '3.jpg',
+            basePath + '4.jpg',
+            basePath + '5.jpg'
+        ],
+        autoLoad: true,
+        autoRotate: 2,
+        autoRotateInactivityDelay: 2000,
+        showControls: true,
+        compass: true,
+        mouseZoom: true,
+        draggable: true,
+        friction: 0.15
+    });
 
-        viewer = pannellum.viewer('panorama', {
-            title: 'Grand Horizon, Tsingyi, Hongkong',
-            author: 'Barry, Sep 2007',
-            northOffset: 130,
-            pitch: 0,
-            yaw: 0,
-            hfov: 100,
-            type: 'cubemap',
-            cubeMap: [
-                basePath + '0.jpg',
-                basePath + '1.jpg',
-                basePath + '2.jpg',
-                basePath + '3.jpg',
-                basePath + '4.jpg',
-                basePath + '5.jpg'
-            ],
-            autoLoad: true,
-            autoRotate: 2,
-            autoRotateInactivityDelay: 2000,
-            showControls: true,
-            compass: true,
-            mouseZoom: true,
-            draggable: true,
-            friction: 0.15
-        });
-    })();
+    const panoElement = document.getElementById('panorama');
+    const heightSlider = document.getElementById('heightSlider');
+    const heightValue = document.getElementById('heightValue');
+    const rotateSpeedInput = document.getElementById('rotateSpeed');
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const panoElement = document.getElementById('panorama');
-        const heightSlider = document.getElementById('heightSlider');
-        const heightValue = document.getElementById('heightValue');
-        const rotateSpeedInput = document.getElementById('rotateSpeed');
-        const autoRotateCheckbox = document.getElementById('autoRotate');
-        const autoResumeRotateCheckbox = document.getElementById('autoResumeRotate');
-        const loadBtn = document.getElementById('loadBtn');
-        const startRotateBtn = document.getElementById('startRotateBtn');
-        const stopRotateBtn = document.getElementById('stopRotateBtn');
-        const panoTypeSelect = document.getElementById('panoType');
-        const basePathInput = document.getElementById('basePath');
-        const equirectUrlInput = document.getElementById('equirectUrl');
-        const cubePathGroup = document.getElementById('cubePathGroup');
-        const equirectGroup = document.getElementById('equirectGroup');
+    heightSlider.addEventListener('input', function() {
+        const height = this.value + 'px';
+        panoElement.style.height = height;
+        heightValue.textContent = height;
+    });
 
-        panoTypeSelect.addEventListener('change', function() {
-            const isCube = this.value === 'cubemap';
-            cubePathGroup.style.display = isCube ? 'block' : 'none';
-            equirectGroup.style.display = isCube ? 'none' : 'block';
-        });
+    document.getElementById('startRotateBtn').addEventListener('click', function() {
+        viewer.startAutoRotate(parseFloat(rotateSpeedInput.value) || 2);
+    });
 
-        heightSlider.addEventListener('input', function() {
-            const height = this.value + 'px';
-            panoElement.style.height = height;
-            heightValue.textContent = height;
-        });
-
-        function loadPanorama() {
-            if (viewer) {
-                viewer.destroy();
-            }
-
-            const rotateSpeed = parseFloat(rotateSpeedInput.value) || 2;
-
-            const config = {
-                autoLoad: true,
-                autoRotate: autoRotateCheckbox.checked ? rotateSpeed : 0,
-                autoRotateInactivityDelay: autoResumeRotateCheckbox.checked ? 2000 : -1,
-                showControls: true,
-                compass: true,
-                mouseZoom: true,
-                draggable: true,
-                friction: 0.15
-            };
-
-            if (panoTypeSelect.value === 'cubemap') {
-                const basePath = basePathInput.value.trim();
-                config.type = 'cubemap';
-                config.cubeMap = ['0', '1', '2', '3', '4', '5'].map(n => basePath + n + '.jpg');
-            } else {
-                config.type = 'equirectangular';
-                config.panorama = equirectUrlInput.value.trim();
-            }
-
-            viewer = pannellum.viewer('panorama', config);
-        }
-
-        loadBtn.addEventListener('click', loadPanorama);
-
-        startRotateBtn.addEventListener('click', function() {
-            if (viewer) {
-                viewer.startAutoRotate(parseFloat(rotateSpeedInput.value) || 2);
-            }
-        });
-
-        stopRotateBtn.addEventListener('click', function() {
-            if (viewer) {
-                viewer.stopAutoRotate();
-            }
-        });
+    document.getElementById('stopRotateBtn').addEventListener('click', function() {
+        viewer.stopAutoRotate();
     });
 </script>
 

@@ -123,6 +123,3 @@ H~2~O
 
 X^2^
 
-### Formula
-
-$$T_{\text{new}} = T_{\text{orig}} \times 2^{2/3}$$

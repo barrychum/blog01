@@ -17,5 +17,5 @@ Experiments with 360° panorama viewers, using the test images in `/img/pano-tes
 
 ## Pannellum
 
-- [Viewport demo](/pano/pannellum_viewport/)
+- [Viewport demo](/pano/pannellum/)
 {% endraw %}

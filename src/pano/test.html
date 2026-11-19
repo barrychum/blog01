@@ -132,16 +132,34 @@ eleventyExcludeFromCollections: true
         </div>
     </div>
 
+
+
+
 <script>
     const viewer = pannellum.viewer('panorama', {
         title: 'Grand Horizon, Tsingyi, Hongkong',
         author: 'Barry, Sep 2007',
-        northOffset: 130,
-        pitch: 0,
-        yaw: 0,
-        hfov: 100,
         type: 'equirectangular',
         panorama: '/img/pano-test/test.jpg',
+
+        // 1. Panorama angular dimensions
+        haov: 360,
+        vaov: 90,
+        vOffset: 0,       // Adjust (+ or -) if the horizon isn't dead-center vertically
+
+        // 2. Lock vertical panning to the top/bottom edges (±45°), allow full 360° horizontal spin
+        minPitch: -45,
+        maxPitch: 45,
+
+        // 3. Initial camera & zoom limits
+        pitch: 0,
+        yaw: 0,
+        hfov: 80,
+        minHfov: 30,      // How far users can zoom in
+        maxHfov: 90,      // Prevents zooming out past the black top/bottom edges
+
+        // 4. Playback & controls
+        northOffset: 130,
         autoLoad: true,
         autoRotate: 2,
         autoRotateInactivityDelay: 2000,
@@ -151,7 +169,7 @@ eleventyExcludeFromCollections: true
         draggable: true,
         friction: 0.15
     });
-
+    
     const panoElement = document.getElementById('panorama');
     const heightSlider = document.getElementById('heightSlider');
     const heightValue = document.getElementById('heightValue');

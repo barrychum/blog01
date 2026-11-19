@@ -5,4 +5,4 @@ date: 2026-03-04
 tags: ["post", "photography", "panorama"]
 ---
 ## Pannellum
-- [Viewport demo](/pano/pannellum/)
+- [Viewport demo](/pano/grandhorizon-hongkong-2007-pano/)

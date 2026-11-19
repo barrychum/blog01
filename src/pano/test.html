@@ -133,8 +133,6 @@ eleventyExcludeFromCollections: true
     </div>
 
 <script>
-    const basePath = '/img/pano-test/';
-
     const viewer = pannellum.viewer('panorama', {
         title: 'Grand Horizon, Tsingyi, Hongkong',
         author: 'Barry, Sep 2007',
@@ -142,15 +140,8 @@ eleventyExcludeFromCollections: true
         pitch: 0,
         yaw: 0,
         hfov: 100,
-        type: 'cubemap',
-        cubeMap: [
-            basePath + '0.jpg',
-            basePath + '1.jpg',
-            basePath + '2.jpg',
-            basePath + '3.jpg',
-            basePath + '4.jpg',
-            basePath + '5.jpg'
-        ],
+        type: 'equirectangular',
+        panorama: '/img/pano-test/test.jpg',
         autoLoad: true,
         autoRotate: 2,
         autoRotateInactivityDelay: 2000,

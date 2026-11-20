@@ -7,4 +7,5 @@ tags: ["post", "photography", "panorama"]
 
 - [Grand Horizon, Hong Kong, 2007](/pano/grandhorizon-hongkong-2007-pano/)
 - [Double Cove, Hong Kong, 2015](/pano/double-cove-2015-pano/)
+- [CakeDIY, Hong Kong](/pano/cakediy/)
 - [Hawaii, USA, 1997](/pano/test/)

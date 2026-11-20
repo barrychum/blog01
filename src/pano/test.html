@@ -137,19 +137,19 @@ eleventyExcludeFromCollections: true
 
 <script>
     const viewer = pannellum.viewer('panorama', {
-        title: 'Grand Horizon, Tsingyi, Hongkong',
-        author: 'Barry, Sep 2007',
+        title: 'Hawaii, USA',
+        author: 'Barry, June 1997',
         type: 'equirectangular',
         panorama: '/img/pano-test/test2.jpg',
 
         // 1. Panorama angular dimensions
         haov: 360,
-        vaov: 44,
+        vaov: 40,
         vOffset: 0,       // Adjust (+ or -) if the horizon isn't dead-center vertically
 
         // 2. Lock vertical panning to the top/bottom edges (±45°), allow full 360° horizontal spin
-        minPitch: -22,
-        maxPitch: 22,
+        minPitch: -20,
+        maxPitch: 20,
 
         // 3. Initial camera & zoom limits
         pitch: 0,
